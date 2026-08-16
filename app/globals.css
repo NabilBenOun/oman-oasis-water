@@ -407,26 +407,186 @@ details,
 }
 
 .product-visual {
+  position: relative;
   display: grid;
   min-height: 11rem;
+  overflow: hidden;
   place-items: center;
   border-radius: 20px;
   color: var(--primary-dark);
   font-weight: 950;
-  box-shadow: inset 0 -2rem 4rem rgba(255, 255, 255, 0.4);
+  box-shadow:
+    inset 0 -2rem 4rem rgba(255, 255, 255, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.65);
 }
 
-.product-visual span {
+.product-visual::before {
+  position: absolute;
+  right: 12%;
+  bottom: 11%;
+  left: 12%;
+  height: 1.1rem;
+  content: "";
+  border-radius: 50%;
+  background: rgba(6, 58, 79, 0.12);
+  filter: blur(4px);
+}
+
+.product-stage {
+  position: relative;
   display: grid;
-  width: 4.6rem;
-  height: 8.5rem;
+  width: 8.8rem;
+  height: 9.5rem;
   place-items: end center;
-  border: 1px solid rgba(6, 58, 79, 0.14);
-  border-radius: 2rem 2rem 1rem 1rem;
+}
+
+.bottle {
+  position: relative;
+  display: block;
+  width: 3.5rem;
+  height: 8.4rem;
+  border: 1px solid rgba(6, 58, 79, 0.18);
+  border-radius: 1.25rem 1.25rem 0.75rem 0.75rem;
   background:
-    linear-gradient(90deg, transparent 35%, rgba(255, 255, 255, 0.76), transparent 58%),
-    rgba(255, 255, 255, 0.34);
-  padding-bottom: 0.8rem;
+    linear-gradient(90deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.78) 40%, rgba(123, 227, 255, 0.18) 62%, rgba(255, 255, 255, 0.1)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(123, 227, 255, 0.32) 58%, rgba(15, 147, 199, 0.24));
+  box-shadow:
+    inset 0.55rem 0 1rem rgba(255, 255, 255, 0.42),
+    inset -0.45rem 0 1rem rgba(15, 147, 199, 0.1),
+    0 0.9rem 1.5rem rgba(6, 58, 79, 0.12);
+}
+
+.bottle::before {
+  position: absolute;
+  top: -1rem;
+  right: 50%;
+  width: 1.3rem;
+  height: 1.15rem;
+  content: "";
+  transform: translateX(50%);
+  border: 1px solid rgba(6, 58, 79, 0.18);
+  border-radius: 0.35rem 0.35rem 0.18rem 0.18rem;
+  background: linear-gradient(180deg, #0d6c99, #073a55);
+}
+
+.bottle::after {
+  position: absolute;
+  right: 0.42rem;
+  bottom: 1.4rem;
+  left: 0.42rem;
+  min-height: 2.35rem;
+  content: "OASIS";
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(15, 147, 199, 0.18);
+  border-radius: 0.55rem;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(235, 251, 255, 0.9));
+  color: var(--primary-dark);
+  font-size: 0.58rem;
+  font-weight: 950;
+  letter-spacing: 0;
+}
+
+.bottle-jug {
+  width: 5.7rem;
+  height: 8.25rem;
+  border-radius: 2.2rem 2.2rem 1rem 1rem;
+}
+
+.bottle-jug::before {
+  top: -0.95rem;
+  width: 1.65rem;
+}
+
+.bottle-jug::after {
+  right: 0.82rem;
+  left: 0.82rem;
+}
+
+.bottle-large {
+  width: 3.9rem;
+  height: 8.7rem;
+}
+
+.bottle-small {
+  width: 2.45rem;
+  height: 6.9rem;
+}
+
+.bottle-small::before {
+  width: 1rem;
+  height: 0.9rem;
+  top: -0.78rem;
+}
+
+.bottle-small::after {
+  right: 0.28rem;
+  bottom: 1.05rem;
+  left: 0.28rem;
+  min-height: 1.7rem;
+  font-size: 0.44rem;
+}
+
+.bottle-premium {
+  width: 3.1rem;
+  height: 8.9rem;
+  border-radius: 1.55rem 1.55rem 0.65rem 0.65rem;
+}
+
+.bottle-sparkling {
+  width: 3.25rem;
+  height: 7.6rem;
+  border-radius: 1.15rem 1.15rem 0.72rem 0.72rem;
+  background:
+    radial-gradient(circle at 38% 30%, rgba(255, 255, 255, 0.9) 0 0.13rem, transparent 0.16rem),
+    radial-gradient(circle at 60% 52%, rgba(255, 255, 255, 0.9) 0 0.11rem, transparent 0.14rem),
+    radial-gradient(circle at 43% 70%, rgba(255, 255, 255, 0.9) 0 0.1rem, transparent 0.13rem),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.78) 40%, rgba(123, 227, 255, 0.18) 62%, rgba(255, 255, 255, 0.1)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(123, 227, 255, 0.3) 58%, rgba(15, 147, 199, 0.24));
+}
+
+.pack .product-stage {
+  width: 9.8rem;
+}
+
+.pack .bottle {
+  position: absolute;
+  bottom: 0.7rem;
+}
+
+.back-one {
+  right: 1.2rem;
+  transform: scale(0.9);
+  opacity: 0.84;
+}
+
+.back-two {
+  left: 1.2rem;
+  transform: scale(0.9);
+  opacity: 0.84;
+}
+
+.front-one {
+  right: 3rem;
+}
+
+.front-two {
+  left: 3rem;
+}
+
+.volume-label {
+  position: absolute;
+  right: 0.75rem;
+  top: 0.75rem;
+  z-index: 3;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--primary-dark);
+  padding: 0.35rem 0.62rem;
+  font-size: 0.74rem;
+  font-weight: 950;
+  box-shadow: 0 0.4rem 1rem rgba(6, 58, 79, 0.1);
 }
 
 .product-visual.aqua {

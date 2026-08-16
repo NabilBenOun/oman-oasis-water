@@ -9,6 +9,7 @@ type Product = {
   price: number;
   volume: string;
   tone: string;
+  shape: "jug" | "large" | "small" | "pack" | "premium" | "sparkling";
 };
 
 const products: Product[] = [
@@ -19,6 +20,7 @@ const products: Product[] = [
     price: 0.5,
     volume: "5L",
     tone: "aqua",
+    shape: "jug",
   },
   {
     id: 2,
@@ -27,6 +29,7 @@ const products: Product[] = [
     price: 0.15,
     volume: "1.5L",
     tone: "blue",
+    shape: "large",
   },
   {
     id: 3,
@@ -35,6 +38,7 @@ const products: Product[] = [
     price: 0.08,
     volume: "500ml",
     tone: "mint",
+    shape: "small",
   },
   {
     id: 4,
@@ -43,6 +47,7 @@ const products: Product[] = [
     price: 0.06,
     volume: "330ml",
     tone: "gold",
+    shape: "small",
   },
   {
     id: 5,
@@ -51,6 +56,7 @@ const products: Product[] = [
     price: 1.5,
     volume: "19L",
     tone: "aqua",
+    shape: "jug",
   },
   {
     id: 6,
@@ -59,6 +65,7 @@ const products: Product[] = [
     price: 0.8,
     volume: "6 pack",
     tone: "blue",
+    shape: "pack",
   },
   {
     id: 7,
@@ -67,6 +74,7 @@ const products: Product[] = [
     price: 0.12,
     volume: "750ml",
     tone: "mint",
+    shape: "premium",
   },
   {
     id: 8,
@@ -75,6 +83,7 @@ const products: Product[] = [
     price: 0.1,
     volume: "500ml",
     tone: "gold",
+    shape: "sparkling",
   },
 ];
 
@@ -268,8 +277,23 @@ export default function Home() {
         <div className="product-grid">
           {products.map((product) => (
             <article className="product-card" key={product.id}>
-              <div className={`product-visual ${product.tone}`}>
-                <span>{product.volume}</span>
+              <div
+                className={`product-visual ${product.tone} ${product.shape}`}
+                aria-label={`${product.name} product image`}
+              >
+                <div className="product-stage">
+                  {product.shape === "pack" ? (
+                    <>
+                      <span className="bottle bottle-small back-one" />
+                      <span className="bottle bottle-small back-two" />
+                      <span className="bottle bottle-small front-one" />
+                      <span className="bottle bottle-small front-two" />
+                    </>
+                  ) : (
+                    <span className={`bottle bottle-${product.shape}`} />
+                  )}
+                </div>
+                <span className="volume-label">{product.volume}</span>
               </div>
               <div className="product-copy">
                 <h3>{product.name}</h3>
