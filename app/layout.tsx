@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://oasis-oman-water.example"),
+  metadataBase: new URL("https://oasis-oman-water.noreply240868.chatgpt.site"),
   title: "مياه الواحة | Oasis Oman Water",
   description:
     "توصيل مياه معبأة للمنازل والشركات في سلطنة عمان مع أحجام متعددة وخدمة مجدولة.",

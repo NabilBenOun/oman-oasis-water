@@ -7,150 +7,109 @@ type Product = {
   name: string;
   desc: string;
   price: number;
-  volume: string;
-  tone: string;
-  shape: "jug" | "large" | "small" | "pack" | "premium" | "sparkling";
   imageUrl: string;
 };
 
 const products: Product[] = [
   {
     id: 1,
-    name: "Pure Gallon Jug 5L",
-    desc: "Refillable family jug for kitchens, majlis rooms, and daily use.",
-    price: 0.5,
-    volume: "5L",
-    tone: "aqua",
-    shape: "jug",
-    imageUrl: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&q=80",
+    name: "مياه الواحة 200 مل",
+    desc: "مياه شرب نقية معبأة في عبوة عملية وآمنة، مثالية للمدارس والفعاليات والضيافة اليومية.",
+    price: 0.35,
+    imageUrl: "https://static.wixstatic.com/media/9a2b6b_3ba353d8d2aa4508a16b722c8c43063d~mv2.png",
   },
   {
     id: 2,
-    name: "Oasis 1.5L Bottle",
-    desc: "Crisp family bottle for meals, trips, and office refrigerators.",
-    price: 0.15,
-    volume: "1.5L",
-    tone: "blue",
-    shape: "large",
-    imageUrl: "https://images.unsplash.com/photo-1600271572559-5f774f73fa48?w=400&q=80",
+    name: "مياه الواحة 330 مل",
+    desc: "حجم مثالي للمنزل والعمل والمدارس والرحلات، بنقاء موثوق وطعم منعش في كل عبوة.",
+    price: 0.4,
+    imageUrl: "https://static.wixstatic.com/media/9a2b6b_92281550ca954f63a7792fcdb735848d~mv2.png",
   },
   {
     id: 3,
-    name: "Oasis 500ml Bottle",
-    desc: "Single-serving bottle for daily hydration on the move.",
-    price: 0.08,
-    volume: "500ml",
-    tone: "mint",
-    shape: "small",
-    imageUrl: "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=400&q=80",
+    name: "مياه الواحة 500 مل",
+    desc: "عبوة يومية متوازنة وسهلة الحمل، مناسبة للاستخدام الشخصي وفي المكتب وأثناء التنقل.",
+    price: 0.4,
+    imageUrl: "https://static.wixstatic.com/media/9a2b6b_13e4d87b194d4b72a03a196923ae0220~mv2.png",
   },
   {
     id: 4,
-    name: "Mineral Spring 330ml",
-    desc: "Compact bottle for hospitality trays, events, and children.",
-    price: 0.06,
-    volume: "330ml",
-    tone: "gold",
-    shape: "small",
-    imageUrl: "https://images.unsplash.com/photo-1606168094336-48f205e182a8?w=400&q=80",
+    name: "مياه الواحة 1.5 لتر",
+    desc: "الاختيار العائلي للوجبات والاستخدام اليومي، بعبوة قوية تحافظ على جودة ونقاء المياه.",
+    price: 0.55,
+    imageUrl: "https://static.wixstatic.com/media/9a2b6b_378cfab9e26e404dab0fb7c85f2cce4b~mv2.png",
   },
   {
     id: 5,
-    name: "Office Cooler Jug 19L",
-    desc: "Large cooler replacement delivered fresh to your workplace.",
+    name: "جالون مياه الواحة 5 لتر",
+    desc: "جالون عملي قابل للاسترداد للمنازل والمكاتب، مع خدمة تبديل وتوصيل منتظمة إلى بابك.",
     price: 1.5,
-    volume: "19L",
-    tone: "aqua",
-    shape: "jug",
-    imageUrl: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80",
+    imageUrl: "https://static.wixstatic.com/media/9a2b6b_b0a80f2d5bb2425487648c47119aa8cd~mv2.png",
   },
   {
     id: 6,
-    name: "Family Pack 1.5L",
-    desc: "Six-bottle value pack for weekly home stocking.",
-    price: 0.8,
-    volume: "6 pack",
-    tone: "blue",
-    shape: "pack",
-    imageUrl: "https://images.unsplash.com/photo-1624958219527-9c2be66ca0c9?w=400&q=80",
+    name: "موزع مياه ساخن وبارد",
+    desc: "موزع أنيق وسهل الاستخدام للمكتب والمنزل، يوفر الماء البارد والساخن طوال اليوم.",
+    price: 15,
+    imageUrl: "https://static.wixstatic.com/media/9a2b6b_25ff8155380e4a1ebd107fbd83cd9a3e~mv2.png",
   },
-  {
-    id: 7,
-    name: "Premium Still 750ml",
-    desc: "Elegant table bottle for restaurants and premium service.",
-    price: 0.12,
-    volume: "750ml",
-    tone: "mint",
-    shape: "premium",
-    imageUrl: "https://images.unsplash.com/photo-1523362628745-0c100150b504?w=400&q=80",
-  },
-  {
-    id: 8,
-    name: "Sparkling Mineral 500ml",
-    desc: "Light sparkle for dining, hosting, and refreshment.",
-    price: 0.1,
-    volume: "500ml",
-    tone: "gold",
-    shape: "sparkling",
-    imageUrl: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=400&q=80",
-  },
+];
+
+const benefits = [
+  ["⌁", "مصدر جبلي نقي", "مصدرها ينابيع طبيعية نقية في قلب جبال عمان."],
+  ["◷", "توصيل في نفس اليوم", "اطلب قبل الظهر واستلم مياهك في نفس اليوم في مسقط."],
+  ["✓", "جودة معتمدة دولياً", "مختبرة ومعتمدة وفق المعايير الدولية لراحة بالك."],
+  ["♻", "تغليف صديق للبيئة", "زجاجات قابلة للتدوير 100% ومواد تغليف صديقة للبيئة."],
+  ["♡", "أكثر من 382,949 عميل", "نخدم المنازل والمكاتب والمطاعم في كل محافظة بعمان."],
+  ["◉", "دعم 24/7", "فريقنا متاح دائماً عبر واتساب والهاتف والبريد الإلكتروني."],
+];
+
+const quality = [
+  ["120–180 mg/L", "مستوى TDS مثالي", "النطاق المثالي للطعم والصحة."],
+  ["pH 7.4", "درجة حموضة متوازنة", "قلوية طبيعية تدعم وظائف الجسم الصحية."],
+  ["Ca·Mg·K", "معادن أساسية", "غنية بالكالسيوم والمغنيسيوم والبوتاسيوم."],
+  ["6 Stages", "ترشيح متعدد المراحل", "تنقية تشمل الأشعة فوق البنفسجية والتناضح العكسي."],
+  ["Daily", "اختبار مختبري يومي", "كل دفعة تختبر قبل التوزيع."],
+  ["ISO 9001", "شهادات دولية", "جودة متوافقة مع المعايير الدولية."],
 ];
 
 const governorates = [
-  "Muscat",
-  "Dhofar",
-  "Musandam",
-  "Al Buraimi",
-  "Al Dakhiliyah",
-  "North Al Batinah",
-  "South Al Batinah",
-  "North Ash Sharqiyah",
-  "South Ash Sharqiyah",
-  "Al Dhahirah",
-  "Al Wusta",
+  "مسقط", "ظفار", "مسندم", "البريمي", "الداخلية", "شمال الشرقية",
+  "جنوب الشرقية", "شمال الباطنة", "جنوب الباطنة", "الوسطى", "الظاهرة",
+];
+
+const testimonials = [
+  ["والله خدمة ما شاء الله، المياه وصلت بالوقت المحدد وطعمها زين جداً. نستخدم مياه الواحة من سنتين وما غيرناها.", "سالم بن ناصر الهنائي", "مسقط"],
+  ["من أحسن الشركات اللي تعاملت معها، الموظفين محترمين والتوصيل يوصل بسرعة. أنصح فيها لكل عيلة تبغى مياه نقية.", "أم خالد العبرية", "نزوى"],
+  ["اشتركت في التوصيل الشهري وما ندمت. المياه نظيفة دائماً والتغليف سليم، والسائق محترم كل مرة.", "إبراهيم الشكيلي", "صحار"],
 ];
 
 const faqs = [
-  [
-    "How fast is delivery?",
-    "Muscat orders are usually confirmed the same day. Other governorates are scheduled based on route availability.",
-  ],
-  [
-    "Can I order for an office?",
-    "Yes. Weekly, biweekly, and monthly delivery plans are available for offices, clinics, restaurants, and retail teams.",
-  ],
-  [
-    "Do you collect empty cooler bottles?",
-    "Yes. Empty 19L bottles are collected during the next delivery and rotated through the refill program.",
-  ],
-  [
-    "Which payment methods are available?",
-    "You can confirm by phone or WhatsApp and choose card, transfer, or cash on delivery depending on your area.",
-  ],
+  ["متى سيصل طلبي؟", "الطلبات المقدمة قبل الساعة 12:00 ظهراً تُوصل في نفس اليوم في مسقط. في المحافظات الأخرى يستغرق التوصيل 1–2 يوم عمل."],
+  ["هل التوصيل مجاني فعلاً؟", "نعم، نقدم توصيلاً مجانياً لجميع محافظات وولايات عمان بدون رسوم خفية أو حد أدنى للطلب."],
+  ["ما طرق الدفع المقبولة؟", "نقبل بطاقات الائتمان والخصم الرئيسية، والحوالات البنكية، وبوابات الدفع الإلكترونية."],
+  ["كيف أعلم أن المياه آمنة للشرب؟", "تخضع مياهنا لعملية تنقية صارمة من ست مراحل وتختبر يومياً وفق معايير الجودة الدولية."],
+  ["هل يمكنني إعداد اشتراك توصيل منتظم؟", "نعم، تواصل معنا وسنعد جدول توصيل أسبوعي أو نصف شهري أو شهري يناسب احتياجاتك."],
+  ["ما سياسة الاسترجاع لديكم؟", "تواصل معنا خلال 48 ساعة من التوصيل وسنرتب الاستبدال أو الاسترداد حسب حالة الطلب."],
 ];
 
 function money(value: number) {
-  return `ر.ع. ${value.toFixed(3)}`;
+  return `${value.toFixed(3)} ر.ع.`;
 }
 
 export default function Home() {
   const [cart, setCart] = useState<Record<number, number>>({});
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [sent, setSent] = useState(false);
 
   const cartItems = useMemo(
-    () =>
-      products
-        .map((product) => ({ ...product, quantity: cart[product.id] ?? 0 }))
-        .filter((product) => product.quantity > 0),
+    () => products.map((product) => ({ ...product, quantity: cart[product.id] ?? 0 })).filter((product) => product.quantity > 0),
     [cart],
   );
-
-  const total = cartItems.reduce(
-    (sum, product) => sum + product.price * product.quantity,
-    0,
-  );
+  const count = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   function addToCart(id: number) {
     setCart((current) => ({ ...current, [id]: (current[id] ?? 0) + 1 }));
@@ -161,11 +120,8 @@ export default function Home() {
     setCart((current) => {
       const next = (current[id] ?? 0) + direction;
       const copy = { ...current };
-      if (next <= 0) {
-        delete copy[id];
-      } else {
-        copy[id] = next;
-      }
+      if (next <= 0) delete copy[id];
+      else copy[id] = next;
       return copy;
     });
   }
@@ -173,347 +129,162 @@ export default function Home() {
   return (
     <main className="site-shell">
       <header className="header-wrap">
-        <nav className="topbar" aria-label="Main navigation">
-          <a className="brand" href="#home" aria-label="Oasis Oman Water home">
-            <span className="brand-mark">و</span>
-            <span>
-              <strong>مياه الواحة</strong>
-              <small>Oman Al Waha Water</small>
-            </span>
+        <nav className="topbar" aria-label="التنقل الرئيسي">
+          <a className="brand" href="#home" aria-label="الصفحة الرئيسية">
+            <span className="brand-copy"><strong>OASIS OMAN</strong><small>مياه الواحة</small></span>
+            <span className="brand-mark">ق</span>
           </a>
           <div className="nav-links">
-            <a href="#home">Home</a>
-            <a href="#about">About</a>
-            <a href="#products">Products</a>
-            <a href="#faq">FAQ</a>
-            <a href="#contact">Contact</a>
+            <a className="active" href="#home">الرئيسية</a>
+            <a href="#about">معلومات عنا</a>
+            <a href="#contact">اتصل بنا</a>
+            <a href="#faq">الأسئلة الشائعة</a>
+            <a href="#policies">السياسات⌄</a>
           </div>
           <div className="nav-tools">
-            <select aria-label="Language selector" defaultValue="en">
-              <option value="en">English</option>
-              <option value="ar">العربية</option>
-              <option value="hi">हिन्दी</option>
-              <option value="ur">اردو</option>
-            </select>
-            <button
-              className="cart-button"
-              type="button"
-              onClick={() => setCartOpen(true)}
-              aria-label="Open cart"
-            >
-              Cart
-              <span>{cartItems.reduce((sum, item) => sum + item.quantity, 0)}</span>
+            <button className="language-button" type="button">عربي⌄</button>
+            <button className="cart-button" type="button" onClick={() => setCartOpen(true)} aria-label="فتح السلة">
+              <span className="cart-icon">⌑</span><b>{count}</b>
             </button>
+            <button className="menu-button" type="button" onClick={() => setMenuOpen(!menuOpen)} aria-label="فتح القائمة">{menuOpen ? "×" : "☰"}</button>
           </div>
         </nav>
+        {menuOpen && (
+          <div className="mobile-menu">
+            <a href="#home" onClick={() => setMenuOpen(false)}>الرئيسية</a>
+            <a href="#about" onClick={() => setMenuOpen(false)}>معلومات عنا</a>
+            <a href="#products" onClick={() => setMenuOpen(false)}>منتجاتنا</a>
+            <a href="#faq" onClick={() => setMenuOpen(false)}>الأسئلة الشائعة</a>
+            <a href="#contact" onClick={() => setMenuOpen(false)}>اتصل بنا</a>
+          </div>
+        )}
       </header>
 
       <section className="hero" id="home">
+        <div className="hero-image" />
+        <div className="hero-overlay" />
+        <span className="hero-ring ring-one" /><span className="hero-ring ring-two" />
         <div className="hero-copy">
-          <p className="hero-badge">Oman's premium water delivery</p>
-          <h1>Pure hydration, delivered.</h1>
-          <p className="hero-text">
-            Premium bottled water for your family and office across the
-            governorates of Oman.
-          </p>
-          <div className="hero-actions">
-            <a className="primary-button" href="#products">
-              Order Now
-            </a>
-            <a className="secondary-button" href="#products">
-              View Products
-            </a>
-          </div>
-          <div className="hero-stats" aria-label="Service highlights">
-            <span>
-              <strong>10k+</strong>
-              Families
-            </span>
-            <span>
-              <strong>11</strong>
-              Governorates
-            </span>
-            <span>
-              <strong>ISO</strong>
-              Certified
-            </span>
-            <span>
-              <strong>Free</strong>
-              Delivery
-            </span>
+          <p className="hero-badge">★ الخيار الأول للمياه الفاخرة في عمان ★</p>
+          <h1>مياه الواحة… نقاء عمان يصل إليك.</h1>
+          <p className="hero-text">مياه معبأة فاخرة لعائلتك ومكتبك في جميع محافظات سلطنة عمان.</p>
+          <a className="hero-button" href="#products">اطلب الآن <span>⌑</span></a>
+          <div className="hero-stats">
+            <span><strong>11</strong><small>محافظة</small></span>
+            <span><strong>24+</strong><small>جهة تجارية</small></span>
+            <span><strong>✓</strong><small>توصيل مجاني</small></span>
           </div>
         </div>
-        <div className="hero-card" aria-label="Water products preview">
-          <img src="/hero-water.png" alt="Premium bottled water products" />
-          <div className="hero-product-strip">
-            <span>330ml</span>
-            <span>500ml</span>
-            <span>1.5L</span>
-            <span>19L</span>
-          </div>
-        </div>
+        <a className="scroll-cue" href="#products">↓</a>
       </section>
 
-      <section className="section about-section" id="about">
-        <div className="about-media">
-          <img src="/hero-water.png" alt="Water bottle lineup" />
-        </div>
-        <div>
-          <p className="eyebrow">About Us</p>
-          <h2>Fresh water, simple ordering, reliable routes.</h2>
-          <p>
-            We deliver carefully packed bottled water to homes, offices, and
-            events with a clean ordering experience, quick confirmation, and
-            flexible delivery scheduling.
-          </p>
-          <div className="feature-list">
-            <span>Quality checked source</span>
-            <span>Home and office plans</span>
-            <span>Cooler bottle exchange</span>
-          </div>
-        </div>
-      </section>
-
-      <section className="section products-section" id="products">
+      <section className="section band" id="products">
         <div className="section-heading center">
-          <p className="eyebrow">Our Premium Selection</p>
-          <h2>Choose your water.</h2>
-          <p>
-            Every product card behaves like the old shop: browse, add, review
-            your cart, then continue to delivery details.
-          </p>
+          <h2>تشكيلتنا الفاخرة</h2>
+          <p>مصدرها ينابيع طبيعية نقية، كل زجاجة هي وعد بالنقاء.</p>
+          <span className="heading-line" />
         </div>
         <div className="product-grid">
           {products.map((product) => (
             <article className="product-card" key={product.id}>
-              <div
-                className={`product-visual ${product.tone} ${product.shape}`}
-                aria-label={`${product.name} product image`}
-              >
-                <img src={product.imageUrl} alt={product.name} />
-                <span className="volume-label">{product.volume}</span>
-              </div>
-              <div className="product-copy">
-                <h3>{product.name}</h3>
-                <p>{product.desc}</p>
-              </div>
-              <div className="price-row">
-                <strong>{money(product.price)}</strong>
-                <button type="button" onClick={() => addToCart(product.id)}>
-                  Add to Cart
-                </button>
-              </div>
+              <div className="product-visual"><img src={product.imageUrl} alt={product.name} /></div>
+              <div className="product-copy"><h3>{product.name}</h3><p>{product.desc}</p></div>
+              <div className="price-row"><strong>{money(product.price)}</strong><button type="button" onClick={() => addToCart(product.id)}>＋ أضف إلى السلة</button></div>
             </article>
           ))}
         </div>
       </section>
 
-      <section className="section delivery-section" id="delivery">
-        <div className="section-heading center">
-          <p className="eyebrow">Free Delivery</p>
-          <h2>Across all governorates and states of Oman.</h2>
-        </div>
-        <div className="map-panel">
-          <div className="map-card">
-            <span className="map-pin">Muscat</span>
-            <span className="map-pin second">Dhofar</span>
-            <span className="map-pin third">Batinah</span>
-            <div className="map-rings" />
-          </div>
-          <div className="region-grid">
-            {governorates.map((region) => (
-              <span key={region}>{region}</span>
-            ))}
-          </div>
+      <section className="section band aqua-band">
+        <div className="section-heading center"><h2>لماذا تختار مياه الواحة؟</h2><p>نحن لا نبيع المياه فحسب — بل نقدم الصحة والنقاء وراحة البال.</p><span className="heading-line" /></div>
+        <div className="benefit-grid">
+          {benefits.map(([icon, title, text]) => <article className="benefit" key={title}><span className="benefit-icon">{icon}</span><h3>{title}</h3><p>{text}</p></article>)}
         </div>
       </section>
 
-      <section className="section faq-section" id="faq">
-        <div className="section-heading center">
-          <p className="eyebrow">FAQ</p>
-          <h2>Questions before checkout?</h2>
-        </div>
-        <div className="faq-list">
-          {faqs.map(([question, answer], index) => (
-            <details key={question} open={index === 0}>
-              <summary>{question}</summary>
-              <p>{answer}</p>
-            </details>
-          ))}
+      <section className="section band story-section" id="about">
+        <div className="story-media"><video src="https://omanoasis.com/wp-content/uploads/2024/11/WhatsApp-Video-2024-09-05-at-00.05.34_71d84715-2.mp4#t=50,65" muted autoPlay loop playsInline aria-label="مياه الواحة — ممثل الشركة" /></div>
+        <div className="story-copy">
+          <p className="overline">قصتنا</p><h2>رحلة من النقاء، صُممت لعمان</h2><span className="heading-line right" />
+          <p><strong>OASIS OMAN — مياه الواحة</strong> علامة تجارية عُمانية متخصصة في توصيل المياه الأنظف والأكثر نضارة لكل منزل وعمل في عُمان.</p>
+          <p>تُستخرج مياهنا من ينابيع طبيعية في جبال الحجر العُمانية، حيث تعمل الصخور كمرشح طبيعي مثالي. نعبئها بعناية للحفاظ على تركيبتها المعدنية وطزاجتها.</p>
+          <div className="mission-grid"><div><h4>مهمتنا</h4><p>جعل المياه النقية والآمنة متاحة لكل منزل ومنشأة في عمان.</p></div><div><h4>رؤيتنا</h4><p>أن نكون العلامة التجارية الأكثر ثقة في عمان.</p></div></div>
+          <div className="story-stats"><span><strong>4,842+</strong>عميل نثق بهم</span><span><strong>24+</strong>جهة تجارية</span><span><strong>11</strong>محافظة</span></div>
         </div>
       </section>
 
-      <section className="section contact-section" id="contact">
-        <div className="section-heading center">
-          <p className="eyebrow">Contact Us</p>
-          <h2>We are here to help.</h2>
+      <section className="section band aqua-band">
+        <div className="section-heading center"><h2>جودة المياه</h2><p>كل قطرة مختبرة، كل دفعة معتمدة.</p><span className="heading-line" /></div>
+        <div className="quality-grid">
+          {quality.map(([value, title, text]) => <article key={title}><strong>{value}</strong><h3>{title}</h3><p>{text}</p></article>)}
         </div>
+      </section>
+
+      <section className="section band delivery-section" id="delivery">
+        <div className="section-heading center"><h2>توصيل في جميع أنحاء عمان</h2><p>سريع ومجاني وموثوق — أينما كنت في عمان.</p><span className="heading-line" /></div>
+        <div className="delivery-features">
+          <article><b>✦</b><h3>توصيل مجاني</h3><p>بدون حد أدنى للطلب.</p></article>
+          <article><b>◷</b><h3>في نفس اليوم</h3><p>للطلبات قبل الظهر في مسقط.</p></article>
+          <article><b>▣</b><h3>توصيل مجدول</h3><p>اختر الوقت المفضل لديك.</p></article>
+          <article><b>⌖</b><h3>تتبع مباشر</h3><p>تحديثات عبر واتساب.</p></article>
+        </div>
+        <div className="delivery-panel">
+          <div><h3>نغطي جميع المحافظات</h3><div className="region-grid">{governorates.map((region) => <span key={region}>{region}</span>)}</div><p className="free-banner"><strong>FREE</strong> توصيل مجاني لجميع محافظات وولايات عمان.</p></div>
+          <div className="truck-media"><img src="https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=800&q=80" alt="Delivery truck" /></div>
+        </div>
+      </section>
+
+      <section className="section band aqua-band testimonials-section">
+        <div className="section-heading center"><h2>ما يقوله عملاؤنا</h2><p>موثوق به من قِبل مئات الآلاف من الأسر والمنشآت في عمان.</p><span className="heading-line" /></div>
+        <div className="testimonial-grid">{testimonials.map(([quote, name, city]) => <article key={name}><div className="stars">★★★★★</div><p>“{quote}”</p><div className="customer"><span>{name.slice(0,1)}</span><div><strong>{name}</strong><small>{city}</small></div></div></article>)}</div>
+      </section>
+
+      <section className="section band faq-section" id="faq">
+        <div className="section-heading center"><h2>الأسئلة الشائعة</h2><p>كل ما تحتاج معرفته عن مياه الواحة.</p><span className="heading-line" /></div>
+        <div className="faq-list">{faqs.map(([question, answer], index) => <details key={question} open={index === 0}><summary>{question}<span>＋</span></summary><p>{answer}</p></details>)}</div>
+      </section>
+
+      <section className="section band aqua-band contact-section" id="contact">
+        <div className="section-heading center"><h2>تواصل معنا</h2><p>نحن هنا للمساعدة. تواصل معنا في أي وقت.</p><span className="heading-line" /></div>
         <div className="contact-grid">
           <div className="contact-cards">
-            <a href="tel:+96893649190">Phone: +968 9364 9190</a>
-            <a href="https://wa.me/96893649190">WhatsApp: +968 9364 9190</a>
-            <a href="mailto:info@aquapure.om">Email: info@aquapure.om</a>
-            <span>Location: Muscat, Sultanate of Oman</span>
-            <span>Hours: Sat - Thu, 8:00 AM - 10:00 PM</span>
+            <a href="tel:+96893649190"><span>☎</span><div><small>الهاتف</small><strong dir="ltr">+96893649190</strong></div></a>
+            <a href="https://wa.me/96893649190"><span>◉</span><div><small>واتساب</small><strong dir="ltr">+96893649190</strong></div></a>
+            <a href="mailto:info@omanoasis.com"><span>✉</span><div><small>البريد الإلكتروني</small><strong>info@omanoasis.com</strong></div></a>
+            <div><span>⌖</span><div><small>الموقع</small><strong>صندوق بريد 87، الرمز البريدي 124، الرسيل، سلطنة عمان</strong></div></div>
           </div>
-          <form
-            className="contact-form"
-            onSubmit={(event) => {
-              event.preventDefault();
-              setSent(true);
-            }}
-          >
-            {sent ? (
-              <div className="success-message">
-                Message sent. We will get back to you within 24 hours.
-              </div>
-            ) : (
-              <>
-                <label>
-                  Your Name
-                  <input placeholder="Enter your name" />
-                </label>
-                <label>
-                  Email Address
-                  <input type="email" placeholder="your@email.com" />
-                </label>
-                <label>
-                  Message
-                  <textarea placeholder="How can we help?" />
-                </label>
-                <button type="submit">Send Message</button>
-              </>
-            )}
+          <form className="contact-form" onSubmit={(event) => { event.preventDefault(); setSent(true); }}>
+            {sent ? <div className="success-message">شكراً لك. تم استلام رسالتك وسنتواصل معك قريباً.</div> : <>
+              <label>اسمك<input placeholder="أدخل اسمك" required /></label>
+              <label>البريد الإلكتروني<input type="email" placeholder="your@email.com" required /></label>
+              <label>الرسالة<textarea placeholder="كيف يمكننا مساعدتك؟" required /></label>
+              <button type="submit">إرسال الرسالة</button>
+            </>}
           </form>
         </div>
       </section>
 
-      <footer className="footer">
-        <div>
-          <strong>مياه الواحة</strong>
-          <p>Premium hydration delivered across Oman.</p>
+      <footer className="footer" id="policies">
+        <div className="footer-grid">
+          <div className="footer-brand"><strong>OASIS OMAN</strong><h3>مياه الواحة</h3><p>ترطيب فاخر يوصل في جميع أنحاء عمان.</p></div>
+          <div><h3>روابط سريعة</h3><a href="#home">الرئيسية</a><a href="#about">معلومات عنا</a><a href="#contact">اتصل بنا</a><a href="#faq">الأسئلة الشائعة</a></div>
+          <div><h3>السياسات</h3><a href="#policies">سياسة الخصوصية</a><a href="#policies">الشروط والأحكام</a><a href="#delivery">سياسة التوصيل</a><a href="#contact">سياسة الاسترجاع</a></div>
+          <div><h3>اتصل بنا</h3><p>الرسيل، سلطنة عمان</p><a dir="ltr" href="tel:+96893649190">+96893649190</a><a href="mailto:info@omanoasis.com">info@omanoasis.com</a></div>
         </div>
-        <nav aria-label="Policy links">
-          <a href="#home">Privacy Policy</a>
-          <a href="#home">Terms & Conditions</a>
-          <a href="#delivery">Delivery Policy</a>
-          <a href="#contact">Refund Policy</a>
-        </nav>
+        <p className="copyright">© 2026 OASIS OMAN — مياه الواحة. جميع الحقوق محفوظة.</p>
       </footer>
 
-      <a className="floating-whatsapp" href="https://wa.me/96893649190">
-        WhatsApp
-      </a>
+      <a className="floating-support" href="https://wa.me/96893649190" aria-label="فتح الدعم"><span>♧</span><b>كيف يمكننا مساعدتك؟</b></a>
 
-      {cartOpen && (
-        <div className="drawer-backdrop" onClick={() => setCartOpen(false)}>
-          <aside className="cart-drawer" onClick={(e) => e.stopPropagation()}>
-            <div className="drawer-header">
-              <h2>Your Cart</h2>
-              <button type="button" onClick={() => setCartOpen(false)}>
-                Close
-              </button>
-            </div>
-            {cartItems.length === 0 ? (
-              <div className="empty-cart">
-                <strong>Your cart is empty.</strong>
-                <p>Add some products to get started.</p>
-              </div>
-            ) : (
-              <>
-                <div className="cart-items">
-                  {cartItems.map((item) => (
-                    <div className="cart-item" key={item.id}>
-                      <div>
-                        <strong>{item.name}</strong>
-                        <span>{money(item.price)}</span>
-                      </div>
-                      <div className="quantity">
-                        <button type="button" onClick={() => updateQuantity(item.id, -1)}>
-                          -
-                        </button>
-                        <span>{item.quantity}</span>
-                        <button type="button" onClick={() => updateQuantity(item.id, 1)}>
-                          +
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="cart-total">
-                  <span>Total</span>
-                  <strong>{money(total)}</strong>
-                </div>
-                <button
-                  className="checkout-button"
-                  type="button"
-                  onClick={() => {
-                    setCartOpen(false);
-                    setCheckoutOpen(true);
-                  }}
-                >
-                  Proceed to Checkout
-                </button>
-              </>
-            )}
-          </aside>
-        </div>
-      )}
+      {cartOpen && <div className="drawer-backdrop" onClick={() => setCartOpen(false)}><aside className="cart-drawer" onClick={(e) => e.stopPropagation()}>
+        <div className="drawer-header"><h2>سلة التسوق</h2><button type="button" onClick={() => setCartOpen(false)}>×</button></div>
+        {cartItems.length === 0 ? <div className="empty-cart"><strong>سلتك فارغة</strong><p>أضف بعض المنتجات للمتابعة.</p></div> : <><div className="cart-items">{cartItems.map((item) => <div className="cart-item" key={item.id}><img src={item.imageUrl} alt="" /><div className="cart-copy"><strong>{item.name}</strong><span>{money(item.price)}</span></div><div className="quantity"><button type="button" onClick={() => updateQuantity(item.id,-1)}>−</button><span>{item.quantity}</span><button type="button" onClick={() => updateQuantity(item.id,1)}>＋</button></div></div>)}</div><div className="cart-total"><span>المجموع</span><strong>{money(total)}</strong></div><button className="checkout-button" type="button" onClick={() => {setCartOpen(false);setCheckoutOpen(true);}}>إتمام الطلب</button></>}
+      </aside></div>}
 
-      {checkoutOpen && (
-        <div className="drawer-backdrop" onClick={() => setCheckoutOpen(false)}>
-          <aside className="checkout-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="drawer-header">
-              <div>
-                <h2>Delivery Information</h2>
-                <p>Fill in your details and we will deliver to your door.</p>
-              </div>
-              <button type="button" onClick={() => setCheckoutOpen(false)}>
-                Close
-              </button>
-            </div>
-            <form className="checkout-grid">
-              <label>
-                Full Name
-                <input placeholder="Enter your full name" />
-              </label>
-              <label>
-                Mobile Number
-                <input placeholder="+968 XXXX XXXX" />
-              </label>
-              <label>
-                Email Address
-                <input type="email" placeholder="your@email.com" />
-              </label>
-              <label>
-                Governorate
-                <select defaultValue="">
-                  <option value="" disabled>
-                    Select your governorate
-                  </option>
-                  {governorates.map((region) => (
-                    <option key={region}>{region}</option>
-                  ))}
-                </select>
-              </label>
-              <label className="wide">
-                Full Delivery Address
-                <textarea placeholder="Street, building, area..." />
-              </label>
-              <div className="order-summary wide">
-                <span>{cartItems.length} items</span>
-                <strong>{money(total)}</strong>
-              </div>
-              <button className="checkout-button wide" type="button">
-                Pay Now
-              </button>
-              <p className="free-note wide">
-                Free delivery to all governorates and states of Oman.
-              </p>
-            </form>
-          </aside>
-        </div>
-      )}
+      {checkoutOpen && <div className="drawer-backdrop" onClick={() => setCheckoutOpen(false)}><aside className="checkout-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="drawer-header"><div><h2>معلومات التوصيل</h2><p>أدخل بياناتك وسنوصل الطلب إلى بابك.</p></div><button type="button" onClick={() => setCheckoutOpen(false)}>×</button></div>
+        <form className="checkout-grid"><label>الاسم الكامل<input placeholder="أدخل اسمك" /></label><label>رقم الهاتف<input dir="ltr" placeholder="+968 XXXX XXXX" /></label><label>البريد الإلكتروني<input type="email" placeholder="your@email.com" /></label><label>المحافظة<select defaultValue=""><option value="" disabled>اختر المحافظة</option>{governorates.map((region)=><option key={region}>{region}</option>)}</select></label><label className="wide">عنوان التوصيل<textarea placeholder="الشارع، المبنى، المنطقة..." /></label><div className="order-summary wide"><span>{count} منتجات</span><strong>{money(total)}</strong></div><button className="checkout-button wide" type="button">الدفع الآن</button><p className="free-note wide">التوصيل مجاني لجميع محافظات سلطنة عمان.</p></form>
+      </aside></div>}
     </main>
   );
 }
