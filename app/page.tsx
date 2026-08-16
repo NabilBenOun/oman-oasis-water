@@ -10,6 +10,7 @@ type Product = {
   volume: string;
   tone: string;
   shape: "jug" | "large" | "small" | "pack" | "premium" | "sparkling";
+  imageUrl: string;
 };
 
 const products: Product[] = [
@@ -21,6 +22,7 @@ const products: Product[] = [
     volume: "5L",
     tone: "aqua",
     shape: "jug",
+    imageUrl: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&q=80",
   },
   {
     id: 2,
@@ -30,6 +32,7 @@ const products: Product[] = [
     volume: "1.5L",
     tone: "blue",
     shape: "large",
+    imageUrl: "https://images.unsplash.com/photo-1600271572559-5f774f73fa48?w=400&q=80",
   },
   {
     id: 3,
@@ -39,6 +42,7 @@ const products: Product[] = [
     volume: "500ml",
     tone: "mint",
     shape: "small",
+    imageUrl: "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=400&q=80",
   },
   {
     id: 4,
@@ -48,6 +52,7 @@ const products: Product[] = [
     volume: "330ml",
     tone: "gold",
     shape: "small",
+    imageUrl: "https://images.unsplash.com/photo-1606168094336-48f205e182a8?w=400&q=80",
   },
   {
     id: 5,
@@ -57,6 +62,7 @@ const products: Product[] = [
     volume: "19L",
     tone: "aqua",
     shape: "jug",
+    imageUrl: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80",
   },
   {
     id: 6,
@@ -66,6 +72,7 @@ const products: Product[] = [
     volume: "6 pack",
     tone: "blue",
     shape: "pack",
+    imageUrl: "https://images.unsplash.com/photo-1624958219527-9c2be66ca0c9?w=400&q=80",
   },
   {
     id: 7,
@@ -75,6 +82,7 @@ const products: Product[] = [
     volume: "750ml",
     tone: "mint",
     shape: "premium",
+    imageUrl: "https://images.unsplash.com/photo-1523362628745-0c100150b504?w=400&q=80",
   },
   {
     id: 8,
@@ -84,6 +92,7 @@ const products: Product[] = [
     volume: "500ml",
     tone: "gold",
     shape: "sparkling",
+    imageUrl: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=400&q=80",
   },
 ];
 
@@ -281,18 +290,7 @@ export default function Home() {
                 className={`product-visual ${product.tone} ${product.shape}`}
                 aria-label={`${product.name} product image`}
               >
-                <div className="product-stage">
-                  {product.shape === "pack" ? (
-                    <>
-                      <span className="bottle bottle-small back-one" />
-                      <span className="bottle bottle-small back-two" />
-                      <span className="bottle bottle-small front-one" />
-                      <span className="bottle bottle-small front-two" />
-                    </>
-                  ) : (
-                    <span className={`bottle bottle-${product.shape}`} />
-                  )}
-                </div>
+                <img src={product.imageUrl} alt={product.name} />
                 <span className="volume-label">{product.volume}</span>
               </div>
               <div className="product-copy">
