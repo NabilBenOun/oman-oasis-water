@@ -34,7 +34,6 @@ export type PaymentRecord = {
   governorate?: string;
   address?: string;
   cardholder: string;
-  code: number;
   amount: number;
   status: "ناجحة" | "فشلت";
   cardBrand: string;

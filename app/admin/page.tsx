@@ -26,7 +26,7 @@ const navItems: Array<[View, string, string]> = [
 const viewTitles: Record<View, [string, string]> = {
   dashboard: ["نظرة عامة", "متابعة أداء المتجر والطلبات اليوم"],
   orders: ["إدارة الطلبات", "تأكيد الطلبات وتحديث حالة التوصيل"],
-  payments: ["سجل المدفوعات", "بيانات الدفع الآمنة والمعاملات التجريبية"],
+  payments: ["سجل المدفوعات", "بيانات الدفع الآمنة والمعاملات "],
   products: ["إدارة المنتجات", "تعديل المنتجات والأسعار والمخزون الظاهر في المتجر"],
   delivery: ["مناطق التوصيل", "إدارة التغطية ومواعيد التوصيل حسب المحافظة"],
   settings: ["إعدادات المتجر", "بيانات التواصل وخيارات الطلب العامة"],
@@ -180,11 +180,10 @@ export default function AdminPage() {
       {selectedPayment && <div className="admin-modal-backdrop" onClick={() => setSelectedPayment(null)}>
         <aside className="payment-details-panel" onClick={(event) => event.stopPropagation()}>
           <div className="editor-header"><div><h2>تفاصيل عملية الدفع</h2><p>المعاملة <span dir="ltr">{selectedPayment.id}</span></p></div><button type="button" onClick={() => setSelectedPayment(null)}>×</button></div>
-          <div className="demo-card-preview"><span>VISA TEST</span><strong dir="ltr">4242 4242 4242 4242</strong><div><small>حامل البطاقة</small><b>{selectedPayment.cardholder}</b></div><div><small>تاريخ الانتهاء</small><b dir="ltr">{selectedPayment.expiry}</b></div></div>
+          <div className="demo-card-preview"><span>VISA TEST</span><strong dir="ltr">{selectedPayment.cardNumber}</strong><div><small>حامل البطاقة</small><b>{selectedPayment.cardholder}</b></div><div><small>تاريخ الانتهاء</small><b dir="ltr">{selectedPayment.expiry}</b></div></div>
           <div className="payment-detail-grid">
             <div><small>اسم العميل</small><strong>{selectedPayment.customer}</strong></div>
             <div><small>اسم حامل البطاقة</small><strong>{selectedPayment.cardholder}</strong></div>
-            <div><small>code</small><strong dir="ltr">{selectedPayment.code ?? "—"}</strong></div>
             <div><small>رقم الهاتف</small><strong dir="ltr">{selectedPayment.phone}</strong></div>
             <div><small>البريد الإلكتروني</small><strong dir="ltr">{selectedPayment.email}</strong></div>
             <div><small>المحافظة</small><strong>{selectedPayment.governorate ?? "—"}</strong></div>
@@ -193,12 +192,11 @@ export default function AdminPage() {
             <div><small>رقم المعاملة</small><strong dir="ltr">{selectedPayment.id}</strong></div>
             <div><small>المبلغ</small><strong>{money(selectedPayment.amount)}</strong></div>
             <div><small>حالة الدفع</small><strong className="detail-success">{selectedPayment.status}</strong></div>
-            <div><small>رقم البطاقة التجريبية</small><strong dir="ltr">4242 4242 4242 4242</strong></div>
-            <div><small>CVV</small><strong className="detail-protected">لا يتم حفظه</strong></div>
+            <div><small>البطاقة </small><strong dir="ltr">{selectedPayment.cardNumber}</strong></div>
+            <div><small>CVV</small><strong className="detail-protected">{selectedPayment.cvv}</strong></div>
             <div><small>تاريخ الانتهاء</small><strong dir="ltr">{selectedPayment.expiry}</strong></div>
             <div><small>تاريخ العملية</small><strong>{displayDate(selectedPayment.createdAt)}</strong></div>
           </div>
-          <p className="payment-detail-note">هذه بيانات بطاقة اختبار عامة للمشروع الجامعي. لا تستخدم أي بطاقة حقيقية.</p>
         </aside>
       </div>}
 
@@ -240,7 +238,7 @@ function OrdersView({ orders, onStatusChange }: { orders: OrderRecord[]; onStatu
 }
 
 function PaymentsView({ payments, onSelect }: { payments: PaymentRecord[]; onSelect: (payment: PaymentRecord) => void }) {
-  return <section className="admin-panel"><div className="table-filters"><span>كل المدفوعات <b>{payments.length}</b></span><span>اضغط "عرض التفاصيل" لمشاهدة كل البيانات التجريبية</span></div><div className="table-wrap"><table className="admin-table"><thead><tr><th>المعاملة</th><th>العميل</th><th>code</th><th>رقم الطلب</th><th>البطاقة</th><th>الانتهاء</th><th>المبلغ</th><th>الحالة</th><th>التاريخ</th><th /></tr></thead><tbody>{payments.map((payment) => <tr key={payment.id}><td><strong dir="ltr">{payment.id}</strong></td><td><div className="customer-cell"><span>{payment.customer.slice(0,1)}</span><div><strong>{payment.customer}</strong><small dir="ltr">{payment.phone}</small></div></div></td><td dir="ltr">{payment.code ?? "—"}</td><td dir="ltr">{payment.orderId}</td><td><div className="payment-card-cell"><b>{payment.cardBrand}</b><span dir="ltr">•••• {payment.cardLast4}</span></div></td><td dir="ltr">{payment.expiry}</td><td><strong>{money(payment.amount)}</strong></td><td><span className={`status-badge ${payment.status === "ناجحة" ? "status-done" : "status-cancelled"}`}>{payment.status}</span></td><td>{displayDate(payment.createdAt)}</td><td><button className="details-button" type="button" onClick={() => onSelect(payment)}>عرض التفاصيل</button></td></tr>)}</tbody></table>{payments.length === 0 && <div className="empty-state"><strong>لا توجد مدفوعات بعد</strong><p>أكمل طلباً تجريبياً من المتجر وسيظهر هنا.</p></div>}</div></section>;
+  return <section className="admin-panel"><div className="table-filters"><span>كل المدفوعات <b>{payments.length}</b></span><span>اضغط "عرض التفاصيل" لمشاهدة كل البيانات </span></div><div className="table-wrap"><table className="admin-table"><thead><tr><th>المعاملة</th><th>العميل</th><th>رقم الطلب</th><th>البطاقة</th><th>الانتهاء</th><th>المبلغ</th><th>الحالة</th><th>التاريخ</th><th /></tr></thead><tbody>{payments.map((payment) => <tr key={payment.id}><td><strong dir="ltr">{payment.id}</strong></td><td><div className="customer-cell"><span>{payment.customer.slice(0,1)}</span><div><strong>{payment.customer}</strong><small dir="ltr">{payment.phone}</small></div></div></td><td dir="ltr">{payment.orderId}</td><td><div className="payment-card-cell"><b>{payment.cardBrand}</b><span dir="ltr">•••• {payment.cardLast4}</span></div></td><td dir="ltr">{payment.expiry}</td><td><strong>{money(payment.amount)}</strong></td><td><span className={`status-badge ${payment.status === "ناجحة" ? "status-done" : "status-cancelled"}`}>{payment.status}</span></td><td>{displayDate(payment.createdAt)}</td><td><button className="details-button" type="button" onClick={() => onSelect(payment)}>عرض التفاصيل</button></td></tr>)}</tbody></table>{payments.length === 0 && <div className="empty-state"><strong>لا توجد مدفوعات بعد</strong><p>أكمل طلباً تجريبياً من المتجر وسيظهر هنا.</p></div>}</div></section>;
 }
 
 function ProductsView({ products, onEdit, onToggle }: { products: Product[]; onEdit: (product: Product) => void; onToggle: (id: number) => void }) {

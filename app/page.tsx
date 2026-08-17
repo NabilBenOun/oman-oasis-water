@@ -44,7 +44,6 @@ export default function Home() {
   const [products, setProducts] = useState<Product[]>(defaultProducts);
   const [cart, setCart] = useState<Record<number, number>>({});
   const [cartOpen, setCartOpen] = useState(false);
-  const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [sent, setSent] = useState(false);
 
@@ -88,24 +87,22 @@ export default function Home() {
     });
   }
 
-  function submitOrder(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = new FormData(event.currentTarget);
+  function beginCheckout() {
     const order: OrderRecord = {
       id: `OW-${String(Date.now()).slice(-6)}`,
-      customer: String(form.get("customer") ?? ""),
-      phone: String(form.get("phone") ?? ""),
-      email: String(form.get("email") ?? ""),
-      governorate: String(form.get("governorate") ?? ""),
-      address: String(form.get("address") ?? ""),
+      customer: "",
+      phone: "",
+      email: "",
+      governorate: "",
+      address: "",
       total,
       itemCount: count,
       status: "جديد",
+      paymentStatus: "بانتظار الدفع",
       createdAt: new Date().toISOString(),
     };
     const current = JSON.parse(window.localStorage.getItem(STORAGE_KEYS.orders) ?? "[]") as OrderRecord[];
     window.localStorage.setItem(STORAGE_KEYS.orders, JSON.stringify([order, ...current]));
-    setCart({});
     window.location.href = `/payment?order=${encodeURIComponent(order.id)}`;
   }
 
@@ -261,12 +258,7 @@ export default function Home() {
 
       {cartOpen && <div className="drawer-backdrop" onClick={() => setCartOpen(false)}><aside className="cart-drawer" onClick={(e) => e.stopPropagation()}>
         <div className="drawer-header"><h2>سلة التسوق</h2><button type="button" onClick={() => setCartOpen(false)}>×</button></div>
-        {cartItems.length === 0 ? <div className="empty-cart"><strong>سلتك فارغة</strong><p>أضف بعض المنتجات للمتابعة.</p></div> : <><div className="cart-items">{cartItems.map((item) => <div className="cart-item" key={item.id}><img src={item.imageUrl} alt="" /><div className="cart-copy"><strong>{item.name}</strong><span>{money(item.price)}</span></div><div className="quantity"><button type="button" onClick={() => updateQuantity(item.id,-1)}>−</button><span>{item.quantity}</span><button type="button" onClick={() => updateQuantity(item.id,1)}>＋</button></div></div>)}</div><div className="cart-total"><span>المجموع</span><strong>{money(total)}</strong></div><button className="checkout-button" type="button" onClick={() => {setCartOpen(false);setCheckoutOpen(true);}}>إتمام الطلب</button></>}
-      </aside></div>}
-
-      {checkoutOpen && <div className="drawer-backdrop" onClick={() => setCheckoutOpen(false)}><aside className="checkout-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="drawer-header"><div><h2>معلومات التوصيل</h2><p>أدخل بياناتك وسنوصل الطلب إلى بابك.</p></div><button type="button" onClick={() => setCheckoutOpen(false)}>×</button></div>
-        <form className="checkout-grid" onSubmit={submitOrder}><label>الاسم الكامل<input name="customer" placeholder="أدخل اسمك" required /></label><label>رقم الهاتف<input name="phone" dir="ltr" placeholder="+968 XXXX XXXX" required /></label><label>البريد الإلكتروني<input name="email" type="email" placeholder="your@email.com" required /></label><label>المحافظة<select name="governorate" defaultValue="" required><option value="" disabled>اختر المحافظة</option>{governorates.map((region)=><option key={region}>{region}</option>)}</select></label><label className="wide">عنوان التوصيل<textarea name="address" placeholder="الشارع، المبنى، المنطقة..." required /></label><div className="order-summary wide"><span>{count} منتجات</span><strong>{money(total)}</strong></div><button className="checkout-button wide" type="submit">تأكيد الطلب</button><p className="free-note wide">التوصيل مجاني لجميع محافظات سلطنة عمان.</p></form>
+        {cartItems.length === 0 ? <div className="empty-cart"><strong>سلتك فارغة</strong><p>أضف بعض المنتجات للمتابعة.</p></div> : <><div className="cart-items">{cartItems.map((item) => <div className="cart-item" key={item.id}><img src={item.imageUrl} alt="" /><div className="cart-copy"><strong>{item.name}</strong><span>{money(item.price)}</span></div><div className="quantity"><button type="button" onClick={() => updateQuantity(item.id,-1)}>−</button><span>{item.quantity}</span><button type="button" onClick={() => updateQuantity(item.id,1)}>＋</button></div></div>)}</div><div className="cart-total"><span>المجموع</span><strong>{money(total)}</strong></div><button className="checkout-button" type="button" onClick={beginCheckout}>إتمام الطلب والدفع</button></>}
       </aside></div>}
     </main>
   );
