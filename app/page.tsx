@@ -1,59 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-
-type Product = {
-  id: number;
-  name: string;
-  desc: string;
-  price: number;
-  imageUrl: string;
-};
-
-const products: Product[] = [
-  {
-    id: 1,
-    name: "مياه الواحة 200 مل",
-    desc: "مياه شرب نقية معبأة في عبوة عملية وآمنة، مثالية للمدارس والفعاليات والضيافة اليومية.",
-    price: 0.35,
-    imageUrl: "https://static.wixstatic.com/media/9a2b6b_3ba353d8d2aa4508a16b722c8c43063d~mv2.png",
-  },
-  {
-    id: 2,
-    name: "مياه الواحة 330 مل",
-    desc: "حجم مثالي للمنزل والعمل والمدارس والرحلات، بنقاء موثوق وطعم منعش في كل عبوة.",
-    price: 0.4,
-    imageUrl: "https://static.wixstatic.com/media/9a2b6b_92281550ca954f63a7792fcdb735848d~mv2.png",
-  },
-  {
-    id: 3,
-    name: "مياه الواحة 500 مل",
-    desc: "عبوة يومية متوازنة وسهلة الحمل، مناسبة للاستخدام الشخصي وفي المكتب وأثناء التنقل.",
-    price: 0.4,
-    imageUrl: "https://static.wixstatic.com/media/9a2b6b_13e4d87b194d4b72a03a196923ae0220~mv2.png",
-  },
-  {
-    id: 4,
-    name: "مياه الواحة 1.5 لتر",
-    desc: "الاختيار العائلي للوجبات والاستخدام اليومي، بعبوة قوية تحافظ على جودة ونقاء المياه.",
-    price: 0.55,
-    imageUrl: "https://static.wixstatic.com/media/9a2b6b_378cfab9e26e404dab0fb7c85f2cce4b~mv2.png",
-  },
-  {
-    id: 5,
-    name: "جالون مياه الواحة 5 لتر",
-    desc: "جالون عملي قابل للاسترداد للمنازل والمكاتب، مع خدمة تبديل وتوصيل منتظمة إلى بابك.",
-    price: 1.5,
-    imageUrl: "https://static.wixstatic.com/media/9a2b6b_b0a80f2d5bb2425487648c47119aa8cd~mv2.png",
-  },
-  {
-    id: 6,
-    name: "موزع مياه ساخن وبارد",
-    desc: "موزع أنيق وسهل الاستخدام للمكتب والمنزل، يوفر الماء البارد والساخن طوال اليوم.",
-    price: 15,
-    imageUrl: "https://static.wixstatic.com/media/9a2b6b_25ff8155380e4a1ebd107fbd83cd9a3e~mv2.png",
-  },
-];
+import { useEffect, useMemo, useState } from "react";
+import { defaultProducts, governorates, STORAGE_KEYS, type OrderRecord, type Product } from "./site-data";
 
 const benefits = [
   ["⌁", "مصدر جبلي نقي", "مصدرها ينابيع طبيعية نقية في قلب جبال عمان."],
@@ -71,11 +19,6 @@ const quality = [
   ["6 Stages", "ترشيح متعدد المراحل", "تنقية تشمل الأشعة فوق البنفسجية والتناضح العكسي."],
   ["Daily", "اختبار مختبري يومي", "كل دفعة تختبر قبل التوزيع."],
   ["ISO 9001", "شهادات دولية", "جودة متوافقة مع المعايير الدولية."],
-];
-
-const governorates = [
-  "مسقط", "ظفار", "مسندم", "البريمي", "الداخلية", "شمال الشرقية",
-  "جنوب الشرقية", "شمال الباطنة", "جنوب الباطنة", "الوسطى", "الظاهرة",
 ];
 
 const testimonials = [
@@ -98,11 +41,31 @@ function money(value: number) {
 }
 
 export default function Home() {
+  const [products, setProducts] = useState<Product[]>(defaultProducts);
   const [cart, setCart] = useState<Record<number, number>>({});
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [sent, setSent] = useState(false);
+  const [orderConfirmed, setOrderConfirmed] = useState(false);
+
+  useEffect(() => {
+    const loadProducts = () => {
+      try {
+        const saved = window.localStorage.getItem(STORAGE_KEYS.products);
+        if (saved) setProducts(JSON.parse(saved));
+      } catch {
+        setProducts(defaultProducts);
+      }
+    };
+    loadProducts();
+    window.addEventListener("storage", loadProducts);
+    window.addEventListener("oasis-products-updated", loadProducts);
+    return () => {
+      window.removeEventListener("storage", loadProducts);
+      window.removeEventListener("oasis-products-updated", loadProducts);
+    };
+  }, []);
 
   const cartItems = useMemo(
     () => products.map((product) => ({ ...product, quantity: cart[product.id] ?? 0 })).filter((product) => product.quantity > 0),
@@ -124,6 +87,29 @@ export default function Home() {
       else copy[id] = next;
       return copy;
     });
+  }
+
+  function submitOrder(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const order: OrderRecord = {
+      id: `OW-${String(Date.now()).slice(-6)}`,
+      customer: String(form.get("customer") ?? ""),
+      phone: String(form.get("phone") ?? ""),
+      email: String(form.get("email") ?? ""),
+      governorate: String(form.get("governorate") ?? ""),
+      address: String(form.get("address") ?? ""),
+      total,
+      itemCount: count,
+      status: "جديد",
+      createdAt: new Date().toISOString(),
+    };
+    const current = JSON.parse(window.localStorage.getItem(STORAGE_KEYS.orders) ?? "[]") as OrderRecord[];
+    window.localStorage.setItem(STORAGE_KEYS.orders, JSON.stringify([order, ...current]));
+    setCart({});
+    setCheckoutOpen(false);
+    setOrderConfirmed(true);
+    window.setTimeout(() => setOrderConfirmed(false), 4500);
   }
 
   return (
@@ -185,7 +171,7 @@ export default function Home() {
           <span className="heading-line" />
         </div>
         <div className="product-grid">
-          {products.map((product) => (
+          {products.filter((product) => product.active !== false).map((product) => (
             <article className="product-card" key={product.id}>
               <div className="product-visual"><img src={product.imageUrl} alt={product.name} /></div>
               <div className="product-copy"><h3>{product.name}</h3><p>{product.desc}</p></div>
@@ -269,12 +255,13 @@ export default function Home() {
           <div className="footer-brand"><strong>OASIS OMAN</strong><h3>مياه الواحة</h3><p>ترطيب فاخر يوصل في جميع أنحاء عمان.</p></div>
           <div><h3>روابط سريعة</h3><a href="#home">الرئيسية</a><a href="#about">معلومات عنا</a><a href="#contact">اتصل بنا</a><a href="#faq">الأسئلة الشائعة</a></div>
           <div><h3>السياسات</h3><a href="#policies">سياسة الخصوصية</a><a href="#policies">الشروط والأحكام</a><a href="#delivery">سياسة التوصيل</a><a href="#contact">سياسة الاسترجاع</a></div>
-          <div><h3>اتصل بنا</h3><p>الرسيل، سلطنة عمان</p><a dir="ltr" href="tel:+96893649190">+96893649190</a><a href="mailto:info@omanoasis.com">info@omanoasis.com</a></div>
+          <div><h3>اتصل بنا</h3><p>الرسيل، سلطنة عمان</p><a dir="ltr" href="tel:+96893649190">+96893649190</a><a href="mailto:info@omanoasis.com">info@omanoasis.com</a><a href="/admin">لوحة الإدارة</a></div>
         </div>
         <p className="copyright">© 2026 OASIS OMAN — مياه الواحة. جميع الحقوق محفوظة.</p>
       </footer>
 
       <a className="floating-support" href="https://wa.me/96893649190" aria-label="فتح الدعم"><span>♧</span><b>كيف يمكننا مساعدتك؟</b></a>
+      {orderConfirmed && <div className="order-toast" role="status"><strong>تم استلام طلبك</strong><span>سيتم التواصل معك لتأكيد التوصيل.</span></div>}
 
       {cartOpen && <div className="drawer-backdrop" onClick={() => setCartOpen(false)}><aside className="cart-drawer" onClick={(e) => e.stopPropagation()}>
         <div className="drawer-header"><h2>سلة التسوق</h2><button type="button" onClick={() => setCartOpen(false)}>×</button></div>
@@ -283,7 +270,7 @@ export default function Home() {
 
       {checkoutOpen && <div className="drawer-backdrop" onClick={() => setCheckoutOpen(false)}><aside className="checkout-modal" onClick={(e) => e.stopPropagation()}>
         <div className="drawer-header"><div><h2>معلومات التوصيل</h2><p>أدخل بياناتك وسنوصل الطلب إلى بابك.</p></div><button type="button" onClick={() => setCheckoutOpen(false)}>×</button></div>
-        <form className="checkout-grid"><label>الاسم الكامل<input placeholder="أدخل اسمك" /></label><label>رقم الهاتف<input dir="ltr" placeholder="+968 XXXX XXXX" /></label><label>البريد الإلكتروني<input type="email" placeholder="your@email.com" /></label><label>المحافظة<select defaultValue=""><option value="" disabled>اختر المحافظة</option>{governorates.map((region)=><option key={region}>{region}</option>)}</select></label><label className="wide">عنوان التوصيل<textarea placeholder="الشارع، المبنى، المنطقة..." /></label><div className="order-summary wide"><span>{count} منتجات</span><strong>{money(total)}</strong></div><button className="checkout-button wide" type="button">الدفع الآن</button><p className="free-note wide">التوصيل مجاني لجميع محافظات سلطنة عمان.</p></form>
+        <form className="checkout-grid" onSubmit={submitOrder}><label>الاسم الكامل<input name="customer" placeholder="أدخل اسمك" required /></label><label>رقم الهاتف<input name="phone" dir="ltr" placeholder="+968 XXXX XXXX" required /></label><label>البريد الإلكتروني<input name="email" type="email" placeholder="your@email.com" required /></label><label>المحافظة<select name="governorate" defaultValue="" required><option value="" disabled>اختر المحافظة</option>{governorates.map((region)=><option key={region}>{region}</option>)}</select></label><label className="wide">عنوان التوصيل<textarea name="address" placeholder="الشارع، المبنى، المنطقة..." required /></label><div className="order-summary wide"><span>{count} منتجات</span><strong>{money(total)}</strong></div><button className="checkout-button wide" type="submit">تأكيد الطلب</button><p className="free-note wide">التوصيل مجاني لجميع محافظات سلطنة عمان.</p></form>
       </aside></div>}
     </main>
   );
