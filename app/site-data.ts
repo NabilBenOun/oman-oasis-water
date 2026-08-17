@@ -18,12 +18,32 @@ export type OrderRecord = {
   total: number;
   itemCount: number;
   status: "جديد" | "قيد التجهيز" | "خرج للتوصيل" | "مكتمل" | "ملغي";
+  paymentStatus?: "بانتظار الدفع" | "مدفوع" | "فشل";
+  paymentId?: string;
+  cardBrand?: string;
+  cardLast4?: string;
+  createdAt: string;
+};
+
+export type PaymentRecord = {
+  id: string;
+  orderId: string;
+  customer: string;
+  phone: string;
+  email: string;
+  cardholder: string;
+  amount: number;
+  status: "ناجحة" | "فشلت";
+  cardBrand: string;
+  cardLast4: string;
+  expiry: string;
   createdAt: string;
 };
 
 export const STORAGE_KEYS = {
   products: "oasis-admin-products",
   orders: "oasis-admin-orders",
+  payments: "oasis-admin-payments",
   settings: "oasis-admin-settings",
 } as const;
 

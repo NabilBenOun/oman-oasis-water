@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { defaultProducts, governorates, STORAGE_KEYS, type OrderRecord, type Product } from "../site-data";
+import { defaultProducts, governorates, STORAGE_KEYS, type OrderRecord, type PaymentRecord, type Product } from "../site-data";
 import "./admin.css";
 
-type View = "dashboard" | "orders" | "products" | "delivery" | "settings";
+type View = "dashboard" | "orders" | "payments" | "products" | "delivery" | "settings";
 
 const seedOrders: OrderRecord[] = [
   { id: "OW-10482", customer: "سالم الهنائي", phone: "+968 9212 4410", email: "salim@example.com", governorate: "مسقط", address: "الخوض، شارع 18", total: 3.2, itemCount: 6, status: "جديد", createdAt: "2026-08-17T08:24:00.000Z" },
@@ -17,6 +17,7 @@ const seedOrders: OrderRecord[] = [
 const navItems: Array<[View, string, string]> = [
   ["dashboard", "⌂", "نظرة عامة"],
   ["orders", "▤", "الطلبات"],
+  ["payments", "▣", "المدفوعات"],
   ["products", "□", "المنتجات"],
   ["delivery", "⌖", "مناطق التوصيل"],
   ["settings", "⚙", "الإعدادات"],
@@ -25,6 +26,7 @@ const navItems: Array<[View, string, string]> = [
 const viewTitles: Record<View, [string, string]> = {
   dashboard: ["نظرة عامة", "متابعة أداء المتجر والطلبات اليوم"],
   orders: ["إدارة الطلبات", "تأكيد الطلبات وتحديث حالة التوصيل"],
+  payments: ["سجل المدفوعات", "بيانات الدفع الآمنة والمعاملات التجريبية"],
   products: ["إدارة المنتجات", "تعديل المنتجات والأسعار والمخزون الظاهر في المتجر"],
   delivery: ["مناطق التوصيل", "إدارة التغطية ومواعيد التوصيل حسب المحافظة"],
   settings: ["إعدادات المتجر", "بيانات التواصل وخيارات الطلب العامة"],
@@ -42,6 +44,7 @@ export default function AdminPage() {
   const [view, setView] = useState<View>("dashboard");
   const [products, setProducts] = useState<Product[]>(defaultProducts);
   const [orders, setOrders] = useState<OrderRecord[]>(seedOrders);
+  const [payments, setPayments] = useState<PaymentRecord[]>([]);
   const [editing, setEditing] = useState<Product | null>(null);
   const [query, setQuery] = useState("");
   const [navOpen, setNavOpen] = useState(false);
@@ -52,8 +55,10 @@ export default function AdminPage() {
     try {
       const savedProducts = window.localStorage.getItem(STORAGE_KEYS.products);
       const savedOrders = window.localStorage.getItem(STORAGE_KEYS.orders);
+      const savedPayments = window.localStorage.getItem(STORAGE_KEYS.payments);
       if (savedProducts) setProducts(JSON.parse(savedProducts));
       if (savedOrders) setOrders([...JSON.parse(savedOrders), ...seedOrders]);
+      if (savedPayments) setPayments(JSON.parse(savedPayments));
     } catch {
       setProducts(defaultProducts);
       setOrders(seedOrders);
@@ -67,6 +72,10 @@ export default function AdminPage() {
   const filteredOrders = useMemo(
     () => orders.filter((order) => `${order.id} ${order.customer} ${order.phone} ${order.governorate}`.toLowerCase().includes(query.toLowerCase())),
     [orders, query],
+  );
+  const filteredPayments = useMemo(
+    () => payments.filter((payment) => `${payment.id} ${payment.orderId} ${payment.customer} ${payment.cardLast4}`.toLowerCase().includes(query.toLowerCase())),
+    [payments, query],
   );
   const revenue = orders.filter((order) => order.status !== "ملغي").reduce((sum, order) => sum + order.total, 0);
   const pending = orders.filter((order) => ["جديد", "قيد التجهيز", "خرج للتوصيل"].includes(order.status)).length;
@@ -139,11 +148,13 @@ export default function AdminPage() {
           <div className="admin-page-heading">
             <div><h1>{viewTitles[view][0]}</h1><p>{viewTitles[view][1]}</p></div>
             {view === "products" && <button className="admin-primary" type="button" onClick={() => setEditing({ id: Date.now(), name: "منتج جديد", desc: "", price: 0, stock: 0, active: true, imageUrl: "" })}>＋ إضافة منتج</button>}
-            {view === "orders" && <button className="admin-secondary" type="button" onClick={() => window.print()}>⇩ تصدير الطلبات</button>}
+          {view === "orders" && <button className="admin-secondary" type="button" onClick={() => window.print()}>⇩ تصدير الطلبات</button>}
+          {view === "payments" && <button className="admin-secondary" type="button" onClick={() => window.print()}>⇩ تصدير السجل</button>}
           </div>
 
           {view === "dashboard" && <Dashboard orders={orders} products={products} revenue={revenue} pending={pending} onOpenOrders={() => goTo("orders")} />}
           {view === "orders" && <OrdersView orders={filteredOrders} onStatusChange={updateOrder} />}
+          {view === "payments" && <PaymentsView payments={filteredPayments} />}
           {view === "products" && <ProductsView products={filteredProducts} onEdit={setEditing} onToggle={(id) => persistProducts(products.map((product) => product.id === id ? { ...product, active: product.active === false } : product))} />}
           {view === "delivery" && <DeliveryView coverage={coverage} onToggle={(name) => setCoverage((current) => ({ ...current, [name]: !current[name] }))} />}
           {view === "settings" && <SettingsView onSave={() => flash("تم حفظ إعدادات المتجر")} />}
@@ -200,6 +211,10 @@ function statusClass(status: OrderRecord["status"]) {
 
 function OrdersView({ orders, onStatusChange }: { orders: OrderRecord[]; onStatusChange: (id: string, status: OrderRecord["status"]) => void }) {
   return <section className="admin-panel"><div className="table-filters"><span>كل الطلبات <b>{orders.length}</b></span><span>يتم حفظ كل تغيير تلقائياً</span></div><OrderTable orders={orders} onStatusChange={onStatusChange} /></section>;
+}
+
+function PaymentsView({ payments }: { payments: PaymentRecord[] }) {
+  return <section className="admin-panel"><div className="table-filters"><span>كل المدفوعات <b>{payments.length}</b></span><span>تُعرض بيانات البطاقة المقنّعة فقط</span></div><div className="table-wrap"><table className="admin-table"><thead><tr><th>المعاملة</th><th>العميل</th><th>رقم الطلب</th><th>البطاقة</th><th>الانتهاء</th><th>المبلغ</th><th>الحالة</th><th>التاريخ</th></tr></thead><tbody>{payments.map((payment) => <tr key={payment.id}><td><strong dir="ltr">{payment.id}</strong></td><td><div className="customer-cell"><span>{payment.customer.slice(0,1)}</span><div><strong>{payment.customer}</strong><small dir="ltr">{payment.phone}</small></div></div></td><td dir="ltr">{payment.orderId}</td><td><div className="payment-card-cell"><b>{payment.cardBrand}</b><span dir="ltr">•••• {payment.cardLast4}</span></div></td><td dir="ltr">{payment.expiry}</td><td><strong>{money(payment.amount)}</strong></td><td><span className={`status-badge ${payment.status === "ناجحة" ? "status-done" : "status-cancelled"}`}>{payment.status}</span></td><td>{displayDate(payment.createdAt)}</td></tr>)}</tbody></table>{payments.length === 0 && <div className="empty-state"><strong>لا توجد مدفوعات بعد</strong><p>أكمل طلباً تجريبياً من المتجر وسيظهر هنا.</p></div>}</div></section>;
 }
 
 function ProductsView({ products, onEdit, onToggle }: { products: Product[]; onEdit: (product: Product) => void; onToggle: (id: number) => void }) {

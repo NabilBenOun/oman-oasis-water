@@ -47,7 +47,6 @@ export default function Home() {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [sent, setSent] = useState(false);
-  const [orderConfirmed, setOrderConfirmed] = useState(false);
 
   useEffect(() => {
     const loadProducts = () => {
@@ -107,9 +106,7 @@ export default function Home() {
     const current = JSON.parse(window.localStorage.getItem(STORAGE_KEYS.orders) ?? "[]") as OrderRecord[];
     window.localStorage.setItem(STORAGE_KEYS.orders, JSON.stringify([order, ...current]));
     setCart({});
-    setCheckoutOpen(false);
-    setOrderConfirmed(true);
-    window.setTimeout(() => setOrderConfirmed(false), 4500);
+    window.location.href = `/payment?order=${encodeURIComponent(order.id)}`;
   }
 
   return (
@@ -261,7 +258,6 @@ export default function Home() {
       </footer>
 
       <a className="floating-support" href="https://wa.me/96893649190" aria-label="فتح الدعم"><span>♧</span><b>كيف يمكننا مساعدتك؟</b></a>
-      {orderConfirmed && <div className="order-toast" role="status"><strong>تم استلام طلبك</strong><span>سيتم التواصل معك لتأكيد التوصيل.</span></div>}
 
       {cartOpen && <div className="drawer-backdrop" onClick={() => setCartOpen(false)}><aside className="cart-drawer" onClick={(e) => e.stopPropagation()}>
         <div className="drawer-header"><h2>سلة التسوق</h2><button type="button" onClick={() => setCartOpen(false)}>×</button></div>
