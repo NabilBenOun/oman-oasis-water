@@ -66,6 +66,8 @@ export default function PaymentPage() {
         customer: order.customer,
         phone: order.phone,
         email: order.email,
+        governorate: order.governorate,
+        address: order.address,
         cardholder,
         amount: order.total,
         status: "ناجحة",

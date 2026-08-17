@@ -31,6 +31,8 @@ export type PaymentRecord = {
   customer: string;
   phone: string;
   email: string;
+  governorate?: string;
+  address?: string;
   cardholder: string;
   amount: number;
   status: "ناجحة" | "فشلت";
