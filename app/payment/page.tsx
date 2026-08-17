@@ -45,6 +45,10 @@ export default function PaymentPage() {
     event.preventDefault();
     if (!order) return;
     const digits = cardNumber.replace(/\D/g, "");
+    if (!cardholder.trim() || !digits || !expiry || !cvv) {
+      setError("أكمل اسم حامل البطاقة ورقم البطاقة وتاريخ الانتهاء وCVV.");
+      return;
+    }
     if (digits !== TEST_CARD) {
       setError("للمشروع التجريبي استخدم البطاقة 4242 4242 4242 4242 فقط.");
       return;
@@ -93,8 +97,8 @@ export default function PaymentPage() {
     <header className="payment-header"><a href="/"><span>ق</span><div><strong>OASIS OMAN</strong><small>الدفع الآمن</small></div></a><b>وضع المشروع التجريبي</b></header>
     <section className="amount-banner"><span>▣</span><p>سيتم خصم إجمالي مبلغ الطلب: <strong>{money(order.total)}</strong> من بطاقتك.</p></section>
     <section className="payment-customer"><span>الطلب <b dir="ltr">{order.id}</b></span><span>{order.customer}</span><span>{order.governorate}</span></section>
-    <form className="payment-form" onSubmit={submitPayment}>
-      <div className="payment-form-title"><h1>بيانات الدفع</h1><p>استخدم بيانات البطاقة التجريبية فقط</p></div>
+    <form className="payment-form" onSubmit={submitPayment} noValidate>
+      <div className="payment-form-title"><div><h1>بيانات الدفع</h1><p>استخدم بيانات البطاقة التجريبية فقط</p></div><button type="button" onClick={() => { setCardholder("Nabil Test"); setCardNumber(TEST_CARD); setExpiry("12/30"); setCvv("123"); setError(""); }}>ملء بيانات الاختبار</button></div>
       <label>اسم حامل البطاقة<input value={cardholder} onChange={(event) => setCardholder(event.target.value)} placeholder="اسم حامل البطاقة" autoComplete="cc-name" required /></label>
       <label>رقم البطاقة<input dir="ltr" inputMode="numeric" value={formattedNumber} onChange={(event) => setCardNumber(event.target.value)} placeholder="0000 0000 0000 0000" autoComplete="off" required /><small className="test-hint">بطاقة الاختبار: 4242 4242 4242 4242</small></label>
       <div className="payment-row">
