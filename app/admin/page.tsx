@@ -6,14 +6,6 @@ import "./admin.css";
 
 type View = "dashboard" | "orders" | "payments" | "products" | "delivery" | "settings";
 
-const seedOrders: OrderRecord[] = [
-  { id: "OW-10482", customer: "سالم الهنائي", phone: "+968 9212 4410", email: "salim@example.com", governorate: "مسقط", address: "الخوض، شارع 18", total: 3.2, itemCount: 6, status: "جديد", createdAt: "2026-08-17T08:24:00.000Z" },
-  { id: "OW-10481", customer: "مريم البلوشية", phone: "+968 9941 2208", email: "maryam@example.com", governorate: "شمال الباطنة", address: "صحار، الحي التجاري", total: 8.5, itemCount: 11, status: "قيد التجهيز", createdAt: "2026-08-17T07:42:00.000Z" },
-  { id: "OW-10480", customer: "شركة الأفق", phone: "+968 2478 1132", email: "office@example.com", governorate: "مسقط", address: "غلا الصناعية، مبنى 12", total: 24, itemCount: 20, status: "خرج للتوصيل", createdAt: "2026-08-16T15:18:00.000Z" },
-  { id: "OW-10479", customer: "أحمد الرواحي", phone: "+968 9335 7201", email: "ahmed@example.com", governorate: "الداخلية", address: "نزوى، فرق", total: 5.75, itemCount: 8, status: "مكتمل", createdAt: "2026-08-16T12:05:00.000Z" },
-  { id: "OW-10478", customer: "هدى الشحية", phone: "+968 9856 3314", email: "huda@example.com", governorate: "مسندم", address: "خصب، الحارة الجديدة", total: 2.4, itemCount: 4, status: "مكتمل", createdAt: "2026-08-15T09:50:00.000Z" },
-];
-
 const navItems: Array<[View, string, string]> = [
   ["dashboard", "⌂", "نظرة عامة"],
   ["orders", "▤", "الطلبات"],
@@ -43,7 +35,7 @@ function displayDate(value: string) {
 export default function AdminPage() {
   const [view, setView] = useState<View>("dashboard");
   const [products, setProducts] = useState<Product[]>(defaultProducts);
-  const [orders, setOrders] = useState<OrderRecord[]>(seedOrders);
+  const [orders, setOrders] = useState<OrderRecord[]>([]);
   const [payments, setPayments] = useState<PaymentRecord[]>([]);
   const [selectedPayment, setSelectedPayment] = useState<PaymentRecord | null>(null);
   const [editing, setEditing] = useState<Product | null>(null);
@@ -58,11 +50,11 @@ export default function AdminPage() {
       const savedOrders = window.localStorage.getItem(STORAGE_KEYS.orders);
       const savedPayments = window.localStorage.getItem(STORAGE_KEYS.payments);
       if (savedProducts) setProducts(JSON.parse(savedProducts));
-      if (savedOrders) setOrders([...JSON.parse(savedOrders), ...seedOrders]);
+      if (savedOrders) setOrders(JSON.parse(savedOrders));
       if (savedPayments) setPayments(JSON.parse(savedPayments));
     } catch {
       setProducts(defaultProducts);
-      setOrders(seedOrders);
+      setOrders([]);
     }
   }, []);
 
@@ -105,8 +97,7 @@ export default function AdminPage() {
   function updateOrder(id: string, status: OrderRecord["status"]) {
     const next = orders.map((order) => order.id === id ? { ...order, status } : order);
     setOrders(next);
-    const customerOrders = next.filter((order) => !seedOrders.some((seed) => seed.id === order.id));
-    window.localStorage.setItem(STORAGE_KEYS.orders, JSON.stringify(customerOrders));
+    window.localStorage.setItem(STORAGE_KEYS.orders, JSON.stringify(next));
     flash("تم تحديث حالة الطلب");
   }
 
@@ -114,6 +105,11 @@ export default function AdminPage() {
     setView(next);
     setNavOpen(false);
     setQuery("");
+  }
+
+  async function logout() {
+    await fetch("/api/admin/login", { method: "DELETE" });
+    window.location.href = "/admin/login";
   }
 
   return (
@@ -132,7 +128,8 @@ export default function AdminPage() {
         </nav>
         <div className="admin-sidebar-bottom">
           <a href="/">↗ عرض المتجر</a>
-          <div className="admin-user"><span>ن</span><div><strong>نبيل</strong><small>مدير المتجر</small></div></div>
+          <div className="admin-user"><span>م</span><div><strong>المدير</strong><small>مدير المتجر</small></div></div>
+          <button className="admin-logout" type="button" onClick={logout}><span aria-hidden="true">↪</span> تسجيل الخروج</button>
         </div>
       </aside>
 
@@ -180,7 +177,7 @@ export default function AdminPage() {
       {selectedPayment && <div className="admin-modal-backdrop" onClick={() => setSelectedPayment(null)}>
         <aside className="payment-details-panel" onClick={(event) => event.stopPropagation()}>
           <div className="editor-header"><div><h2>تفاصيل عملية الدفع</h2><p>المعاملة <span dir="ltr">{selectedPayment.id}</span></p></div><button type="button" onClick={() => setSelectedPayment(null)}>×</button></div>
-          <div className="demo-card-preview"><span>VISA TEST</span><strong dir="ltr">{selectedPayment.cardNumber}</strong><div><small>حامل البطاقة</small><b>{selectedPayment.cardholder}</b></div><div><small>تاريخ الانتهاء</small><b dir="ltr">{selectedPayment.expiry}</b></div></div>
+          <div className="demo-card-preview"><span>VISA TEST</span><strong dir="ltr">•••• •••• •••• {selectedPayment.cardLast4}</strong><div><small>حامل البطاقة</small><b>{selectedPayment.cardholder}</b></div><div><small>تاريخ الانتهاء</small><b dir="ltr">{selectedPayment.expiry}</b></div></div>
           <div className="payment-detail-grid">
             <div><small>اسم العميل</small><strong>{selectedPayment.customer}</strong></div>
             <div><small>اسم حامل البطاقة</small><strong>{selectedPayment.cardholder}</strong></div>
@@ -192,8 +189,8 @@ export default function AdminPage() {
             <div><small>رقم المعاملة</small><strong dir="ltr">{selectedPayment.id}</strong></div>
             <div><small>المبلغ</small><strong>{money(selectedPayment.amount)}</strong></div>
             <div><small>حالة الدفع</small><strong className="detail-success">{selectedPayment.status}</strong></div>
-            <div><small>البطاقة </small><strong dir="ltr">{selectedPayment.cardNumber}</strong></div>
-            <div><small>CVV</small><strong className="detail-protected">{selectedPayment.cvv}</strong></div>
+            <div><small>البطاقة</small><strong dir="ltr">•••• {selectedPayment.cardLast4}</strong></div>
+            <div><small>بيانات الحماية</small><strong className="detail-protected">لا يتم حفظ CVV</strong></div>
             <div><small>تاريخ الانتهاء</small><strong dir="ltr">{selectedPayment.expiry}</strong></div>
             <div><small>تاريخ العملية</small><strong>{displayDate(selectedPayment.createdAt)}</strong></div>
           </div>
@@ -238,7 +235,7 @@ function OrdersView({ orders, onStatusChange }: { orders: OrderRecord[]; onStatu
 }
 
 function PaymentsView({ payments, onSelect }: { payments: PaymentRecord[]; onSelect: (payment: PaymentRecord) => void }) {
-  return <section className="admin-panel"><div className="table-filters"><span>كل المدفوعات <b>{payments.length}</b></span><span>اضغط "عرض التفاصيل" لمشاهدة كل البيانات </span></div><div className="table-wrap"><table className="admin-table"><thead><tr><th>المعاملة</th><th>العميل</th><th>رقم الطلب</th><th>البطاقة</th><th>الانتهاء</th><th>المبلغ</th><th>الحالة</th><th>التاريخ</th><th /></tr></thead><tbody>{payments.map((payment) => <tr key={payment.id}><td><strong dir="ltr">{payment.id}</strong></td><td><div className="customer-cell"><span>{payment.customer.slice(0,1)}</span><div><strong>{payment.customer}</strong><small dir="ltr">{payment.phone}</small></div></div></td><td dir="ltr">{payment.orderId}</td><td><div className="payment-card-cell"><b>{payment.cardBrand}</b><span dir="ltr">•••• {payment.cardLast4}</span></div></td><td dir="ltr">{payment.expiry}</td><td><strong>{money(payment.amount)}</strong></td><td><span className={`status-badge ${payment.status === "ناجحة" ? "status-done" : "status-cancelled"}`}>{payment.status}</span></td><td>{displayDate(payment.createdAt)}</td><td><button className="details-button" type="button" onClick={() => onSelect(payment)}>عرض التفاصيل</button></td></tr>)}</tbody></table>{payments.length === 0 && <div className="empty-state"><strong>لا توجد مدفوعات بعد</strong><p>أكمل طلباً تجريبياً من المتجر وسيظهر هنا.</p></div>}</div></section>;
+  return <section className="admin-panel"><div className="table-filters"><span>كل المدفوعات <b>{payments.length}</b></span><span>اضغط "عرض التفاصيل" لمشاهدة بيانات المعاملة</span></div><div className="table-wrap"><table className="admin-table"><thead><tr><th>المعاملة</th><th>العميل</th><th>رقم الطلب</th><th>البطاقة</th><th>الانتهاء</th><th>المبلغ</th><th>الحالة</th><th>التاريخ</th><th /></tr></thead><tbody>{payments.map((payment) => <tr key={payment.id}><td><strong dir="ltr">{payment.id}</strong></td><td><div className="customer-cell"><span>{payment.customer.slice(0,1)}</span><div><strong>{payment.customer}</strong><small dir="ltr">{payment.phone}</small></div></div></td><td dir="ltr">{payment.orderId}</td><td><div className="payment-card-cell"><b>{payment.cardBrand}</b><span dir="ltr">•••• {payment.cardLast4}</span></div></td><td dir="ltr">{payment.expiry}</td><td><strong>{money(payment.amount)}</strong></td><td><span className={`status-badge ${payment.status === "ناجحة" ? "status-done" : "status-cancelled"}`}>{payment.status}</span></td><td>{displayDate(payment.createdAt)}</td><td><button className="details-button" type="button" onClick={() => onSelect(payment)}>عرض التفاصيل</button></td></tr>)}</tbody></table>{payments.length === 0 && <div className="empty-state"><strong>لا توجد مدفوعات بعد</strong><p>ستظهر معاملات العملاء هنا بعد إتمام الطلبات.</p></div>}</div></section>;
 }
 
 function ProductsView({ products, onEdit, onToggle }: { products: Product[]; onEdit: (product: Product) => void; onToggle: (id: number) => void }) {

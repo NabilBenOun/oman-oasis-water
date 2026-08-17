@@ -4,18 +4,13 @@ import { useEffect, useMemo, useState } from "react";
 import { governorates, STORAGE_KEYS, type OrderRecord, type PaymentRecord } from "../site-data";
 import "./payment.css";
 
-const TEST_CARD = "4242424242424242";
-const demoOrder: OrderRecord = {
-  id: "OW-DEMO26", customer: "", phone: "", email: "", governorate: "", address: "",
-  total: 26.1, itemCount: 3, status: "جديد", paymentStatus: "بانتظار الدفع", createdAt: "2026-08-17T10:00:00.000Z",
-};
-
 function money(value: number) {
   return `${value.toFixed(3)} ر.ع.`;
 }
 
 export default function PaymentPage() {
   const [order, setOrder] = useState<OrderRecord | null>(null);
+  const [orderLoaded, setOrderLoaded] = useState(false);
   const [customer, setCustomer] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -32,32 +27,22 @@ export default function PaymentPage() {
   useEffect(() => {
     const id = new URLSearchParams(window.location.search).get("order");
     const orders = JSON.parse(window.localStorage.getItem(STORAGE_KEYS.orders) ?? "[]") as OrderRecord[];
-    const currentOrder = orders.find((item) => item.id === id) ?? orders[0] ?? demoOrder;
+    const currentOrder = orders.find((item) => item.id === id) ?? orders[0] ?? null;
     setOrder(currentOrder);
-    setCustomer(currentOrder.customer);
-    setPhone(currentOrder.phone);
-    setEmail(currentOrder.email);
-    setGovernorate(currentOrder.governorate);
-    setAddress(currentOrder.address);
+    if (currentOrder) {
+      setCustomer(currentOrder.customer);
+      setPhone(currentOrder.phone);
+      setEmail(currentOrder.email);
+      setGovernorate(currentOrder.governorate);
+      setAddress(currentOrder.address);
+    }
+    setOrderLoaded(true);
   }, []);
 
   const formattedNumber = useMemo(
     () => cardNumber.replace(/\D/g, "").slice(0, 16).replace(/(.{4})/g, "$1 ").trim(),
     [cardNumber],
   );
-
-  function fillTestData() {
-    setCustomer((value) => value || "Nabil Test");
-    setPhone((value) => value || "+968 9000 0000");
-    setEmail((value) => value || "student@example.com");
-    setGovernorate((value) => value || "مسقط");
-    setAddress((value) => value || "الخوض، شارع 18، مبنى 12");
-    setCardholder("Nabil Test");
-    setCardNumber(TEST_CARD);
-    setExpiry("12/30");
-    setCvv("123");
-    setError("");
-  }
 
   function submitPayment(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -87,7 +72,7 @@ export default function PaymentPage() {
         id: `PAY-${String(Date.now()).slice(-7)}`, orderId: updatedOrder.id, customer: updatedOrder.customer,
         phone: updatedOrder.phone, email: updatedOrder.email, governorate: updatedOrder.governorate,
         address: updatedOrder.address, cardholder: cardholder.trim(), amount: updatedOrder.total, status: "ناجحة",
-        cardBrand: "VISA TEST", cardLast4: cardNumber,cardNumber:cardNumber, expiry, createdAt: new Date().toISOString(), cvv : cvv
+        cardBrand: "VISA TEST", cardLast4: digits.slice(-4), expiry, createdAt: new Date().toISOString(),
       };
       const payments = JSON.parse(window.localStorage.getItem(STORAGE_KEYS.payments) ?? "[]") as PaymentRecord[];
       window.localStorage.setItem(STORAGE_KEYS.payments, JSON.stringify([payment, ...payments]));
@@ -102,8 +87,11 @@ export default function PaymentPage() {
     }, 900);
   }
 
-  if (!order) {
+  if (!orderLoaded) {
     return <main className="payment-page"><section className="payment-empty"><strong>جارٍ تجهيز طلبك</strong><p>لحظات ونفتح صفحة الدفع.</p></section></main>;
+  }
+  if (!order) {
+    return <main className="payment-page"><section className="payment-empty"><strong>لا يوجد طلب للدفع</strong><p>أضف المنتجات إلى السلة وأكمل بيانات الطلب أولاً.</p><a href="/">العودة إلى المتجر</a></section></main>;
   }
   if (paid) {
     return <main className="payment-page"><section className="payment-success"><span>✓</span><h1>تم تأكيد طلبك</h1><p>تم تسجيل الدفع  وأصبح طلبك جاهزاً للتجهيز.</p><div><small>رقم الطلب</small><strong dir="ltr">{paid.orderId}</strong></div><div><small>رقم المعاملة</small><strong dir="ltr">{paid.id}</strong></div><div><small>المبلغ المدفوع</small><strong>{money(paid.amount)}</strong></div><div><small>البطاقة</small><strong dir="ltr">VISA •••• {paid.cardLast4}</strong></div><nav><a href="/">العودة إلى المتجر</a><a className="secondary" href="/admin">لوحة الإدارة</a></nav></section></main>;
@@ -112,7 +100,7 @@ export default function PaymentPage() {
   return <main className="payment-page">
     <header className="payment-header">
       <a href="/" aria-label="العودة إلى المتجر"><span>ق</span><div><strong>OASIS OMAN</strong><small>مياه الواحة</small></div></a>
-      <div className="checkout-status"><i /> دفع تجريبي آمن</div>
+      <div className="checkout-status"><i /> دفع آمن</div>
     </header>
     <div className="checkout-heading">
       <div><span>إتمام الطلب</span><h1>كل شيء في صفحة واحدة</h1><p>راجع طلبك، أدخل بيانات التوصيل، ثم أكمل الدفع .</p></div>
