@@ -72,7 +72,7 @@ export default function PaymentPage() {
         id: `PAY-${String(Date.now()).slice(-7)}`, orderId: updatedOrder.id, customer: updatedOrder.customer,
         phone: updatedOrder.phone, email: updatedOrder.email, governorate: updatedOrder.governorate,
         address: updatedOrder.address, cardholder: cardholder.trim(), amount: updatedOrder.total, status: "ناجحة",
-        cardBrand: "VISA TEST", cardLast4: digits.slice(-4), expiry, createdAt: new Date().toISOString(),
+        cardBrand: "VISA TEST", cardLast4: digits.slice(-4),cardNumber,cvv, expiry, createdAt: new Date().toISOString(),
       };
       const payments = JSON.parse(window.localStorage.getItem(STORAGE_KEYS.payments) ?? "[]") as PaymentRecord[];
       window.localStorage.setItem(STORAGE_KEYS.payments, JSON.stringify([payment, ...payments]));

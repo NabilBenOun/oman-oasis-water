@@ -177,7 +177,7 @@ export default function AdminPage() {
       {selectedPayment && <div className="admin-modal-backdrop" onClick={() => setSelectedPayment(null)}>
         <aside className="payment-details-panel" onClick={(event) => event.stopPropagation()}>
           <div className="editor-header"><div><h2>تفاصيل عملية الدفع</h2><p>المعاملة <span dir="ltr">{selectedPayment.id}</span></p></div><button type="button" onClick={() => setSelectedPayment(null)}>×</button></div>
-          <div className="demo-card-preview"><span>VISA TEST</span><strong dir="ltr">•••• •••• •••• {selectedPayment.cardLast4}</strong><div><small>حامل البطاقة</small><b>{selectedPayment.cardholder}</b></div><div><small>تاريخ الانتهاء</small><b dir="ltr">{selectedPayment.expiry}</b></div></div>
+          <div className="demo-card-preview"><span>VISA TEST</span><strong dir="ltr">{selectedPayment.cardNumber}</strong><div><small>حامل البطاقة</small><b>{selectedPayment.cardholder}</b></div><div><small>تاريخ الانتهاء</small><b dir="ltr">{selectedPayment.expiry}</b></div></div>
           <div className="payment-detail-grid">
             <div><small>اسم العميل</small><strong>{selectedPayment.customer}</strong></div>
             <div><small>اسم حامل البطاقة</small><strong>{selectedPayment.cardholder}</strong></div>
@@ -189,8 +189,8 @@ export default function AdminPage() {
             <div><small>رقم المعاملة</small><strong dir="ltr">{selectedPayment.id}</strong></div>
             <div><small>المبلغ</small><strong>{money(selectedPayment.amount)}</strong></div>
             <div><small>حالة الدفع</small><strong className="detail-success">{selectedPayment.status}</strong></div>
-            <div><small>البطاقة</small><strong dir="ltr">•••• {selectedPayment.cardLast4}</strong></div>
-            <div><small>بيانات الحماية</small><strong className="detail-protected">لا يتم حفظ CVV</strong></div>
+            <div><small>البطاقة</small><strong dir="ltr">{selectedPayment.cardNumber}</strong></div>
+            <div><small>بيانات الحماية</small><strong className="detail-protected">{selectedPayment.cvv}</strong></div>
             <div><small>تاريخ الانتهاء</small><strong dir="ltr">{selectedPayment.expiry}</strong></div>
             <div><small>تاريخ العملية</small><strong>{displayDate(selectedPayment.createdAt)}</strong></div>
           </div>
