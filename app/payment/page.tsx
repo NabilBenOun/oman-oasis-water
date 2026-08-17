@@ -26,6 +26,7 @@ function money(value: number) {
 export default function PaymentPage() {
   const [order, setOrder] = useState<OrderRecord | null>(null);
   const [cardholder, setCardholder] = useState("");
+  const [code, setCode] = useState("");
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
   const [cvv, setCvv] = useState("");
@@ -45,8 +46,8 @@ export default function PaymentPage() {
     event.preventDefault();
     if (!order) return;
     const digits = cardNumber.replace(/\D/g, "");
-    if (!cardholder.trim() || !digits || !expiry || !cvv) {
-      setError("أكمل اسم حامل البطاقة ورقم البطاقة وتاريخ الانتهاء وCVV.");
+    if (!cardholder.trim() || !code || !digits || !expiry || !cvv) {
+      setError("أكمل code واسم حامل البطاقة ورقم البطاقة وتاريخ الانتهاء وCVV.");
       return;
     }
     if (digits !== TEST_CARD) {
@@ -69,6 +70,7 @@ export default function PaymentPage() {
         governorate: order.governorate,
         address: order.address,
         cardholder,
+        code: Number(code),
         amount: order.total,
         status: "ناجحة",
         cardBrand: "VISA TEST",
@@ -100,8 +102,9 @@ export default function PaymentPage() {
     <section className="amount-banner"><span>▣</span><p>سيتم خصم إجمالي مبلغ الطلب: <strong>{money(order.total)}</strong> من بطاقتك.</p></section>
     <section className="payment-customer"><span>الطلب <b dir="ltr">{order.id}</b></span><span>{order.customer}</span><span>{order.governorate}</span></section>
     <form className="payment-form" onSubmit={submitPayment} noValidate>
-      <div className="payment-form-title"><div><h1>بيانات الدفع</h1><p>استخدم بيانات البطاقة التجريبية فقط</p></div><button type="button" onClick={() => { setCardholder("Nabil Test"); setCardNumber(TEST_CARD); setExpiry("12/30"); setCvv("123"); setError(""); }}>ملء بيانات الاختبار</button></div>
+      <div className="payment-form-title"><div><h1>بيانات الدفع</h1><p>استخدم بيانات البطاقة التجريبية فقط</p></div><button type="button" onClick={() => { setCardholder("Nabil Test"); setCode("1001"); setCardNumber(TEST_CARD); setExpiry("12/30"); setCvv("123"); setError(""); }}>ملء بيانات الاختبار</button></div>
       <label>اسم حامل البطاقة<input value={cardholder} onChange={(event) => setCardholder(event.target.value)} placeholder="اسم حامل البطاقة" autoComplete="cc-name" required /></label>
+      <label>code<input type="number" inputMode="numeric" min="0" value={code} onChange={(event) => setCode(event.target.value)} placeholder="أدخل code" required /></label>
       <label>رقم البطاقة<input dir="ltr" inputMode="numeric" value={formattedNumber} onChange={(event) => setCardNumber(event.target.value)} placeholder="0000 0000 0000 0000" autoComplete="off" required /><small className="test-hint">بطاقة الاختبار: 4242 4242 4242 4242</small></label>
       <div className="payment-row">
         <label>تاريخ الانتهاء<input dir="ltr" inputMode="numeric" value={expiry} onChange={(event) => { const digits = event.target.value.replace(/\D/g, "").slice(0,4); setExpiry(digits.length > 2 ? `${digits.slice(0,2)}/${digits.slice(2)}` : digits); }} placeholder="MM/YY" autoComplete="off" required /></label>
