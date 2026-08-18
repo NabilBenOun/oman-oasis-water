@@ -233,21 +233,10 @@ export default function PaymentPage() {
 
       <div className="checkout-heading">
         <div>
-          <span>نموذج التوصيل والدفع</span>
+          <span>نموذج التوصيل والدفع الموحد</span>
           <h1>إتمام طلب مياه الواحة</h1>
           <p>أدخل بيانات التوصيل، اختر طريقة الدفع، وأكد طلبك بلمسة واحدة.</p>
         </div>
-        <ol aria-label="مراحل إتمام الطلب">
-          <li className="done">
-            <b>✓</b>السلة
-          </li>
-          <li className="active">
-            <b>2</b>التوصيل والدفع
-          </li>
-          <li>
-            <b>3</b>التأكيد
-          </li>
-        </ol>
       </div>
 
       <form className="checkout-layout" onSubmit={submitPayment} noValidate>

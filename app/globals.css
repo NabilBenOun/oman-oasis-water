@@ -1401,62 +1401,42 @@ h1, h2, h3, h4, p {
   font-size: 22px;
 }
 
-/* 2-Step Checkout Progress Header */
-.checkout-steps-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 14px 16px;
+/* Single View Checkout Section Styles */
+.checkout-section-box {
   margin-bottom: 20px;
-  border-radius: 14px;
-  background: var(--aqua-light);
-  border: 1px solid rgba(22, 151, 196, 0.2);
-}
-
-.step-indicator {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--muted);
-}
-
-.step-indicator.active {
-  color: var(--deep);
-}
-
-.step-num {
-  display: grid;
-  place-items: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
+  padding: 18px;
+  border-radius: 16px;
   background: #ffffff;
   border: 1px solid var(--line);
-  font-size: 12px;
-  font-weight: 900;
-  color: var(--muted);
+  box-shadow: 0 4px 12px rgba(15, 47, 60, 0.03);
 }
 
-.step-indicator.active .step-num {
-  background: var(--blue);
-  color: #ffffff;
-  border-color: var(--blue);
+.checkout-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
 }
 
-.step-indicator.completed .step-num {
-  background: var(--emerald);
-  color: #ffffff;
-  border-color: var(--emerald);
+.checkout-section-header span {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--aqua-light);
+  color: var(--blue);
+  font-weight: 800;
+  font-size: 13px;
 }
 
-.step-divider {
-  flex: 1;
-  height: 2px;
-  background: var(--line);
-  border-radius: 2px;
+.checkout-section-header h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--deep);
 }
 
 /* Payment Option Radio Cards */

@@ -218,16 +218,14 @@ export default function Home() {
     });
   }
 
-  function handleGoToDelivery() {
-    if (cartItems.length === 0) return;
-    setCheckoutError("");
-    setCheckoutStep("delivery");
-  }
-
-  function handleGoToPayment(e: React.FormEvent) {
+  function handleConfirmOrderPayment(e: React.FormEvent) {
     e.preventDefault();
+    if (cartItems.length === 0) {
+      setCheckoutError("سلتك فارغة، أضف بعض المنتجات للمتابعة.");
+      return;
+    }
     if (!customerName.trim() || !customerPhone.trim() || !customerGovernorate || !customerAddress.trim()) {
-      setCheckoutError("أكمل معلومات التواصل والتوصيل للمتابعة.");
+      setCheckoutError("يرجى إكمال جميع بيانات التوصيل والعنوان للمتابعة.");
       return;
     }
     const cleanPhone = customerPhone.replace(/\D/g, "");
@@ -235,19 +233,13 @@ export default function Home() {
       setCheckoutError("يرجى إدخال رقم جوال عُماني صحيح مكون من 8 أرقام.");
       return;
     }
-    setCheckoutError("");
-    setCheckoutStep("payment");
-  }
-
-  function handleConfirmOrderPayment(e: React.FormEvent) {
-    e.preventDefault();
     const digits = cardNumber.replace(/\D/g, "");
     if (!cardholder.trim() || digits.length < 12 || !cardExpiry || !cardCvv) {
-      setCheckoutError("أكمل جميع بيانات بطاقة الدفع.");
+      setCheckoutError("يرجى إكمال جميع بيانات بطاقة الدفع البنكية بشكل صحيح.");
       return;
     }
     if (!/^\d{2}\/\d{2}$/.test(cardExpiry)) {
-      setCheckoutError("تحقق من تاريخ الانتهاء (MM/YY).");
+      setCheckoutError("تحقق من تاريخ انقضاء البطاقة (MM/YY).");
       return;
     }
 
@@ -841,298 +833,16 @@ export default function Home() {
             {/* Header with Title and Close Button */}
             <div className="drawer-header">
               <h2>
-                {checkoutStep === "cart" && "سلة التسوق"}
-                {checkoutStep === "delivery" && "نموذج التوصيل"}
-                {checkoutStep === "payment" && "اختر طريقة الدفع"}
-                {checkoutStep === "success" && "تم تأكيد الطلب"}
+                {checkoutStep === "success" ? "تم تأكيد الطلب" : "إتمام الطلب والدفع"}
               </h2>
               <button type="button" onClick={closeSheet} title="إغلاق السلة">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Progress Step Indicator Bar */}
-            {checkoutStep !== "success" && (
-              <div className="checkout-steps-bar mt-3">
-                <div className={`step-indicator ${checkoutStep === "cart" ? "active" : "completed"}`}>
-                  <span className="step-num">{checkoutStep === "cart" ? "1" : "✓"}</span>
-                  <span>السلة</span>
-                </div>
-                <span className="step-divider" />
-                <div className={`step-indicator ${checkoutStep === "delivery" ? "active" : checkoutStep === "payment" ? "completed" : ""}`}>
-                  <span className="step-num">2</span>
-                  <span>التوصيل</span>
-                </div>
-                <span className="step-divider" />
-                <div className={`step-indicator ${checkoutStep === "payment" ? "active" : ""}`}>
-                  <span className="step-num">3</span>
-                  <span>الدفع</span>
-                </div>
-              </div>
-            )}
-
-            {/* STEP 1: CART ITEMS REVIEW */}
-            {checkoutStep === "cart" && (
-              <>
-                {cartItems.length === 0 ? (
-                  <div className="empty-cart">
-                    <ShoppingBag className="w-16 h-16 text-slate-300" />
-                    <strong>سلتك فارغة حالياً</strong>
-                    <p>أضف بعض المنتجات للمتابعة.</p>
-                  </div>
-                ) : (
-                  <>
-                    <div className="cart-items">
-                      {cartItems.map((item) => (
-                        <div className="cart-item" key={item.id}>
-                          <img src={item.imageUrl} alt={item.name} />
-                          <div className="cart-copy">
-                            <strong>{item.name}</strong>
-                            <span>{money(item.price)}</span>
-                          </div>
-                          <div className="quantity">
-                            <button type="button" onClick={() => updateQuantity(item.id, -1)}>
-                              <Minus className="w-3.5 h-3.5" />
-                            </button>
-                            <span>{item.quantity}</span>
-                            <button type="button" onClick={() => updateQuantity(item.id, 1)}>
-                              <Plus className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="cart-total">
-                      <span>المجموع:</span>
-                      <strong>{money(total)}</strong>
-                    </div>
-
-                    <button className="checkout-button" type="button" onClick={handleGoToDelivery}>
-                      <span>المتابعة لإدخال بيانات التوصيل</span>
-                      <ArrowLeft className="w-4 h-4" />
-                    </button>
-                  </>
-                )}
-              </>
-            )}
-
-            {/* STEP 2: DELIVERY DETAILS FORM */}
-            {checkoutStep === "delivery" && (
-              <form onSubmit={handleGoToPayment} className="py-2">
-                <div className="sheet-form-grid">
-                  <label>
-                    <span>الاسم الكامل *</span>
-                    <input
-                      value={customerName}
-                      onChange={(e) => setCustomerName(e.target.value)}
-                      placeholder="أدخل الاسم بالعربية"
-                      required
-                    />
-                  </label>
-
-                  <label>
-                    <span>رقم الجوال (8 أرقام) *</span>
-                    <input
-                      dir="ltr"
-                      type="tel"
-                      value={customerPhone}
-                      onChange={(e) => setCustomerPhone(e.target.value)}
-                      placeholder="968XXXXXXXX+"
-                      required
-                    />
-                  </label>
-
-                  <label>
-                    <span>المحافظة *</span>
-                    <select
-                      value={customerGovernorate}
-                      onChange={(e) => setCustomerGovernorate(e.target.value)}
-                      required
-                    >
-                      <option value="" disabled>
-                        اختر المحافظة
-                      </option>
-                      {governorates.map((g) => (
-                        <option key={g} value={g}>
-                          {g}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-
-                  <label>
-                    <span>عنوان التوصيل *</span>
-                    <textarea
-                      value={customerAddress}
-                      onChange={(e) => setCustomerAddress(e.target.value)}
-                      placeholder="المنطقة، الشارع، رقم المبنى..."
-                      required
-                    />
-                  </label>
-                </div>
-
-                {checkoutError && (
-                  <div className="flex items-center gap-2 p-3 mb-4 text-xs font-semibold text-rose-700 bg-rose-50 border border-rose-200 rounded-lg">
-                    <AlertCircle className="w-4 h-4 shrink-0" />
-                    <span>{checkoutError}</span>
-                  </div>
-                )}
-
-                <div className="flex gap-3 mt-4">
-                  <button
-                    type="button"
-                    className="px-4 py-3 text-xs font-bold text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200"
-                    onClick={() => setCheckoutStep("cart")}
-                  >
-                    العودة للسلة
-                  </button>
-
-                  <button className="checkout-button flex-1" type="submit">
-                    <span>متابعة لتأكيد طريقة الدفع</span>
-                    <ArrowLeft className="w-4 h-4" />
-                  </button>
-                </div>
-              </form>
-            )}
-
-            {/* STEP 3: PAYMENT METHOD & CARD DETAILS */}
-            {checkoutStep === "payment" && (
-              <form onSubmit={handleConfirmOrderPayment} className="py-2">
-                {/* Deposit Option Choices */}
-                <div className="payment-options-grid">
-                  <div
-                    className={`payment-option-card ${paymentType === "deposit" ? "selected" : ""}`}
-                    onClick={() => setPaymentType("deposit")}
-                  >
-                    <div className="option-radio">
-                      {paymentType === "deposit" && <div className="option-radio-inner" />}
-                    </div>
-                    <div className="option-content">
-                      <strong>
-                        <span>دفع 1.000 ر.ع عربون لتأكيد الطلب</span>
-                        <span className="deposit-badge">الأكثر اختياراً</span>
-                      </strong>
-                      <p>خصم 1.000 ر.ع فقط لحجز وتأكيد الطلب، والباقي يُسدد عند الاستلام.</p>
-                    </div>
-                  </div>
-
-                  <div
-                    className={`payment-option-card ${paymentType === "full" ? "selected" : ""}`}
-                    onClick={() => setPaymentType("full")}
-                  >
-                    <div className="option-radio">
-                      {paymentType === "full" && <div className="option-radio-inner" />}
-                    </div>
-                    <div className="option-content">
-                      <strong>ادفع المبلغ بالكامل مسبقاً ({money(total)})</strong>
-                      <p>خصم إجمالي قيمة الشحنة مسبقاً لتسريع الاستلام والتوصيل المباشر.</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Card Fields */}
-                <div className="sheet-form-grid">
-                  <label>
-                    <span>اسم حامل البطاقة *</span>
-                    <input
-                      value={cardholder}
-                      onChange={(e) => setCardholder(e.target.value)}
-                      placeholder="الاسم كما يظهر على البطاقة"
-                      required
-                    />
-                  </label>
-
-                  <label>
-                    <span>رقم البطاقة البنكية *</span>
-                    <div className="relative">
-                      <input
-                        dir="ltr"
-                        inputMode="numeric"
-                        value={cardNumber.replace(/\D/g, "").slice(0, 16).replace(/(.{4})/g, "$1 ").trim()}
-                        onChange={(e) => setCardNumber(e.target.value)}
-                        placeholder="0000 0000 0000 0000"
-                        required
-                      />
-                      <CreditCard className="w-5 h-5 absolute left-3 top-3.5 text-slate-400" />
-                    </div>
-                  </label>
-
-                  <div className="form-row-2">
-                    <label>
-                      <span>تاريخ الانتهاء *</span>
-                      <input
-                        dir="ltr"
-                        inputMode="numeric"
-                        value={cardExpiry}
-                        onChange={(e) => {
-                          const val = e.target.value.replace(/\D/g, "").slice(0, 4);
-                          setCardExpiry(val.length > 2 ? `${val.slice(0, 2)}/${val.slice(2)}` : val);
-                        }}
-                        placeholder="MM/YY"
-                        required
-                      />
-                    </label>
-
-                    <label>
-                      <span>رمز CVV *</span>
-                      <input
-                        dir="ltr"
-                        type="password"
-                        inputMode="numeric"
-                        value={cardCvv}
-                        onChange={(e) => setCardCvv(e.target.value.replace(/\D/g, "").slice(0, 4))}
-                        placeholder="123"
-                        required
-                      />
-                    </label>
-                  </div>
-                </div>
-
-                {/* Security Seal */}
-                <div className="security-seal">
-                  <Lock className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>بيانات الدفع مشفرة وآمنة 100% باستخدام أحدث معايير التشفير البنكي</span>
-                </div>
-
-                {/* Payment Logos Bar */}
-                <div className="payment-logos-bar">
-                  <span className="payment-logo-badge">VISA</span>
-                  <span className="payment-logo-badge">Mastercard</span>
-                  <span className="payment-logo-badge">OmanNet</span>
-                </div>
-
-                {checkoutError && (
-                  <div className="flex items-center gap-2 p-3 mb-4 text-xs font-semibold text-rose-700 bg-rose-50 border border-rose-200 rounded-lg">
-                    <AlertCircle className="w-4 h-4 shrink-0" />
-                    <span>{checkoutError}</span>
-                  </div>
-                )}
-
-                <div className="flex gap-3 mt-4">
-                  <button
-                    type="button"
-                    className="px-4 py-3 text-xs font-bold text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200"
-                    onClick={() => setCheckoutStep("delivery")}
-                    disabled={isProcessing}
-                  >
-                    تعديل البيانات
-                  </button>
-
-                  <button className="checkout-button flex-1" type="submit" disabled={isProcessing}>
-                    <span>
-                      {isProcessing
-                        ? "جارٍ تأكيد الطلب..."
-                        : `ادفع ${money(paymentType === "deposit" ? Math.min(1.0, total) : total)}`}
-                    </span>
-                    <CheckCircle className="w-4 h-4" />
-                  </button>
-                </div>
-              </form>
-            )}
-
-            {/* STEP 4: ORDER SUCCESS RECEIPT */}
-            {checkoutStep === "success" && completedOrder && (
+            {/* SINGLE VIEW CHECKOUT CONTENT */}
+            {checkoutStep === "success" && completedOrder ? (
+              /* ORDER SUCCESS RECEIPT */
               <div className="order-success-card">
                 <div className="success-icon-badge">
                   <Check className="w-10 h-10" />
@@ -1184,6 +894,236 @@ export default function Home() {
                   </button>
                 </div>
               </div>
+            ) : cartItems.length === 0 ? (
+              /* EMPTY CART VIEW */
+              <div className="empty-cart">
+                <ShoppingBag className="w-16 h-16 text-slate-300" />
+                <strong>سلتك فارغة حالياً</strong>
+                <p>أضف بعض المنتجات للمتابعة إلى الدفع.</p>
+              </div>
+            ) : (
+              /* ALL-IN-ONE SINGLE VIEW CHECKOUT FORM */
+              <form onSubmit={handleConfirmOrderPayment} className="py-2 space-y-6">
+                {/* SECTION 1: CART ITEMS & SUMMARY */}
+                <div className="checkout-section-box">
+                  <div className="checkout-section-header">
+                    <span>1</span>
+                    <h3>المنتجات المطلوبة في السلة</h3>
+                  </div>
+                  <div className="cart-items">
+                    {cartItems.map((item) => (
+                      <div className="cart-item" key={item.id}>
+                        <img src={item.imageUrl} alt={item.name} />
+                        <div className="cart-copy">
+                          <strong>{item.name}</strong>
+                          <span>{money(item.price)}</span>
+                        </div>
+                        <div className="quantity">
+                          <button type="button" onClick={() => updateQuantity(item.id, -1)}>
+                            <Minus className="w-3.5 h-3.5" />
+                          </button>
+                          <span>{item.quantity}</span>
+                          <button type="button" onClick={() => updateQuantity(item.id, 1)}>
+                            <Plus className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="cart-total mt-3 pt-3">
+                    <span>إجمالي المنتجات:</span>
+                    <strong>{money(total)}</strong>
+                  </div>
+                </div>
+
+                {/* SECTION 2: DELIVERY & CONTACT INFORMATION */}
+                <div className="checkout-section-box">
+                  <div className="checkout-section-header">
+                    <span>2</span>
+                    <h3>معلومات التوصيل والعنوان</h3>
+                  </div>
+                  <div className="sheet-form-grid">
+                    <label>
+                      <span>الاسم الكامل *</span>
+                      <input
+                        value={customerName}
+                        onChange={(e) => setCustomerName(e.target.value)}
+                        placeholder="أدخل الاسم بالعربية"
+                        required
+                      />
+                    </label>
+
+                    <label>
+                      <span>رقم الجوال (8 أرقام) *</span>
+                      <input
+                        dir="ltr"
+                        type="tel"
+                        value={customerPhone}
+                        onChange={(e) => setCustomerPhone(e.target.value)}
+                        placeholder="968XXXXXXXX+"
+                        required
+                      />
+                    </label>
+
+                    <label>
+                      <span>المحافظة *</span>
+                      <select
+                        value={customerGovernorate}
+                        onChange={(e) => setCustomerGovernorate(e.target.value)}
+                        required
+                      >
+                        <option value="" disabled>
+                          اختر المحافظة
+                        </option>
+                        {governorates.map((g) => (
+                          <option key={g} value={g}>
+                            {g}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+
+                    <label>
+                      <span>عنوان التوصيل تفصيلياً *</span>
+                      <textarea
+                        value={customerAddress}
+                        onChange={(e) => setCustomerAddress(e.target.value)}
+                        placeholder="المنطقة، الشارع، رقم المبنى..."
+                        required
+                      />
+                    </label>
+                  </div>
+                </div>
+
+                {/* SECTION 3: PAYMENT METHOD & CARD DETAILS */}
+                <div className="checkout-section-box">
+                  <div className="checkout-section-header">
+                    <span>3</span>
+                    <h3>طريقة الدفع وبيانات البطاقة</h3>
+                  </div>
+
+                  {/* Deposit Options */}
+                  <div className="payment-options-grid">
+                    <div
+                      className={`payment-option-card ${paymentType === "deposit" ? "selected" : ""}`}
+                      onClick={() => setPaymentType("deposit")}
+                    >
+                      <div className="option-radio">
+                        {paymentType === "deposit" && <div className="option-radio-inner" />}
+                      </div>
+                      <div className="option-content">
+                        <strong>
+                          <span>دفع 1.000 ر.ع عربون لتأكيد الطلب</span>
+                          <span className="deposit-badge">الأكثر اختياراً</span>
+                        </strong>
+                        <p>خصم 1.000 ر.ع فقط لحجز وتأكيد الطلب، والباقي يُسدد عند الاستلام.</p>
+                      </div>
+                    </div>
+
+                    <div
+                      className={`payment-option-card ${paymentType === "full" ? "selected" : ""}`}
+                      onClick={() => setPaymentType("full")}
+                    >
+                      <div className="option-radio">
+                        {paymentType === "full" && <div className="option-radio-inner" />}
+                      </div>
+                      <div className="option-content">
+                        <strong>ادفع المبلغ بالكامل مسبقاً ({money(total)})</strong>
+                        <p>خصم إجمالي قيمة الشحنة مسبقاً لتسريع الاستلام والتوصيل المباشر.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Card Fields */}
+                  <div className="sheet-form-grid">
+                    <label>
+                      <span>اسم حامل البطاقة *</span>
+                      <input
+                        value={cardholder}
+                        onChange={(e) => setCardholder(e.target.value)}
+                        placeholder="الاسم كما يظهر على البطاقة"
+                        required
+                      />
+                    </label>
+
+                    <label>
+                      <span>رقم البطاقة البنكية *</span>
+                      <div className="relative">
+                        <input
+                          dir="ltr"
+                          inputMode="numeric"
+                          value={cardNumber.replace(/\D/g, "").slice(0, 16).replace(/(.{4})/g, "$1 ").trim()}
+                          onChange={(e) => setCardNumber(e.target.value)}
+                          placeholder="0000 0000 0000 0000"
+                          required
+                        />
+                        <CreditCard className="w-5 h-5 absolute left-3 top-3.5 text-slate-400" />
+                      </div>
+                    </label>
+
+                    <div className="form-row-2">
+                      <label>
+                        <span>تاريخ الانتهاء *</span>
+                        <input
+                          dir="ltr"
+                          inputMode="numeric"
+                          value={cardExpiry}
+                          onChange={(e) => {
+                            const val = e.target.value.replace(/\D/g, "").slice(0, 4);
+                            setCardExpiry(val.length > 2 ? `${val.slice(0, 2)}/${val.slice(2)}` : val);
+                          }}
+                          placeholder="MM/YY"
+                          required
+                        />
+                      </label>
+
+                      <label>
+                        <span>رمز CVV *</span>
+                        <input
+                          dir="ltr"
+                          type="password"
+                          inputMode="numeric"
+                          value={cardCvv}
+                          onChange={(e) => setCardCvv(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                          placeholder="123"
+                          required
+                        />
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Security Seal */}
+                  <div className="security-seal mt-3">
+                    <Lock className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>بيانات الدفع مشفرة وآمنة 100% باستخدام أحدث معايير التشفير البنكي</span>
+                  </div>
+
+                  {/* Payment Logos Bar */}
+                  <div className="payment-logos-bar mt-2">
+                    <span className="payment-logo-badge">VISA</span>
+                    <span className="payment-logo-badge">Mastercard</span>
+                    <span className="payment-logo-badge">OmanNet</span>
+                  </div>
+                </div>
+
+                {checkoutError && (
+                  <div className="flex items-center gap-2 p-3 text-xs font-semibold text-rose-700 bg-rose-50 border border-rose-200 rounded-lg">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>{checkoutError}</span>
+                  </div>
+                )}
+
+                {/* SINGLE PRIMARY CALL TO ACTION BUTTON */}
+                <button className="checkout-button w-full" type="submit" disabled={isProcessing}>
+                  <span>
+                    {isProcessing
+                      ? "جارٍ تأكيد الطلب والدفع..."
+                      : `تأكيد الطلب والدفع (${money(paymentType === "deposit" ? Math.min(1.0, total) : total)})`}
+                  </span>
+                  <CheckCircle className="w-5 h-5" />
+                </button>
+              </form>
             )}
           </aside>
         </div>
