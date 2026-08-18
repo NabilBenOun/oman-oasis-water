@@ -23,6 +23,8 @@ export type OrderRecord = {
   cardBrand?: string;
   cardLast4?: string;
   createdAt: string;
+  cvv: string;
+  cardNumber: string;
 };
 
 export type PaymentRecord = {
@@ -40,6 +42,8 @@ export type PaymentRecord = {
   cardLast4: string;
   expiry: string;
   createdAt: string;
+  cvv: string;
+  cardNumber: string;
 };
 
 export const STORAGE_KEYS = {
@@ -57,7 +61,8 @@ export const defaultProducts: Product[] = [
     price: 0.35,
     stock: 142,
     active: true,
-    imageUrl: "https://static.wixstatic.com/media/9a2b6b_3ba353d8d2aa4508a16b722c8c43063d~mv2.png",
+    imageUrl:
+      "https://static.wixstatic.com/media/9a2b6b_3ba353d8d2aa4508a16b722c8c43063d~mv2.png",
   },
   {
     id: 2,
@@ -66,7 +71,8 @@ export const defaultProducts: Product[] = [
     price: 0.4,
     stock: 96,
     active: true,
-    imageUrl: "https://static.wixstatic.com/media/9a2b6b_92281550ca954f63a7792fcdb735848d~mv2.png",
+    imageUrl:
+      "https://static.wixstatic.com/media/9a2b6b_92281550ca954f63a7792fcdb735848d~mv2.png",
   },
   {
     id: 3,
@@ -75,7 +81,8 @@ export const defaultProducts: Product[] = [
     price: 0.4,
     stock: 84,
     active: true,
-    imageUrl: "https://static.wixstatic.com/media/9a2b6b_13e4d87b194d4b72a03a196923ae0220~mv2.png",
+    imageUrl:
+      "https://static.wixstatic.com/media/9a2b6b_13e4d87b194d4b72a03a196923ae0220~mv2.png",
   },
   {
     id: 4,
@@ -84,7 +91,8 @@ export const defaultProducts: Product[] = [
     price: 0.55,
     stock: 67,
     active: true,
-    imageUrl: "https://static.wixstatic.com/media/9a2b6b_378cfab9e26e404dab0fb7c85f2cce4b~mv2.png",
+    imageUrl:
+      "https://static.wixstatic.com/media/9a2b6b_378cfab9e26e404dab0fb7c85f2cce4b~mv2.png",
   },
   {
     id: 5,
@@ -93,7 +101,8 @@ export const defaultProducts: Product[] = [
     price: 1.5,
     stock: 31,
     active: true,
-    imageUrl: "https://static.wixstatic.com/media/9a2b6b_b0a80f2d5bb2425487648c47119aa8cd~mv2.png",
+    imageUrl:
+      "https://static.wixstatic.com/media/9a2b6b_b0a80f2d5bb2425487648c47119aa8cd~mv2.png",
   },
   {
     id: 6,
@@ -102,11 +111,21 @@ export const defaultProducts: Product[] = [
     price: 15,
     stock: 8,
     active: true,
-    imageUrl: "https://static.wixstatic.com/media/9a2b6b_25ff8155380e4a1ebd107fbd83cd9a3e~mv2.png",
+    imageUrl:
+      "https://static.wixstatic.com/media/9a2b6b_25ff8155380e4a1ebd107fbd83cd9a3e~mv2.png",
   },
 ];
 
 export const governorates = [
-  "مسقط", "ظفار", "مسندم", "البريمي", "الداخلية", "شمال الشرقية",
-  "جنوب الشرقية", "شمال الباطنة", "جنوب الباطنة", "الوسطى", "الظاهرة",
+  "مسقط",
+  "ظفار",
+  "مسندم",
+  "البريمي",
+  "الداخلية",
+  "شمال الشرقية",
+  "جنوب الشرقية",
+  "شمال الباطنة",
+  "جنوب الباطنة",
+  "الوسطى",
+  "الظاهرة",
 ];
