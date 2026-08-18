@@ -801,16 +801,6 @@ export default function Home() {
         <b>كيف يمكننا مساعدتك؟</b>
       </a>
 
-      {/* Recent Order Live Toast Popup */}
-      {showToast && (
-        <div className="order-toast">
-          <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0" />
-          <div>
-            <strong>طلب جديد من {liveToasts[toastIndex].city}!</strong>
-            <span>قام {liveToasts[toastIndex].name} بطلب {liveToasts[toastIndex].product} الآن</span>
-          </div>
-        </div>
-      )}
 
       {/* Sticky Mobile Bottom Bar */}
       <div className="mobile-bottom-bar">
