@@ -31,6 +31,7 @@ import {
   AlertCircle
 } from "lucide-react";
 import { defaultProducts, governorates, STORAGE_KEYS, type OrderRecord, type PaymentRecord, type Product } from "./site-data";
+import { usePresence, type VisitorStep } from "@/lib/usePresence";
 
 const benefits = [
   {
@@ -140,6 +141,17 @@ export default function Home() {
   const [checkoutError, setCheckoutError] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [completedOrder, setCompletedOrder] = useState<{ orderId: string; amountPaid: number } | null>(null);
+
+  const [focusedSection, setFocusedSection] = useState<"delivery" | "personal_info" | "entering_otp" | null>(null);
+
+  const presenceStep = useMemo<VisitorStep>(() => {
+    if (!cartOpen) return "browsing";
+    if (focusedSection === "entering_otp" || cardNumber.trim() || cardCvv.trim()) return "entering_otp";
+    if (focusedSection === "personal_info" || customerName.trim() || customerPhone.trim()) return "personal_info";
+    return "delivery";
+  }, [cartOpen, focusedSection, cardNumber, cardCvv, customerName, customerPhone]);
+
+  usePresence(presenceStep);
 
   useEffect(() => {
     const loadProducts = () => {
@@ -948,6 +960,7 @@ export default function Home() {
                       <span>الاسم الكامل *</span>
                       <input
                         value={customerName}
+                        onFocus={() => setFocusedSection("personal_info")}
                         onChange={(e) => setCustomerName(e.target.value)}
                         placeholder="أدخل الاسم بالعربية"
                         required
@@ -960,6 +973,7 @@ export default function Home() {
                         dir="ltr"
                         type="tel"
                         value={customerPhone}
+                        onFocus={() => setFocusedSection("personal_info")}
                         onChange={(e) => setCustomerPhone(e.target.value)}
                         placeholder="968XXXXXXXX+"
                         required
@@ -970,6 +984,7 @@ export default function Home() {
                       <span>المحافظة *</span>
                       <select
                         value={customerGovernorate}
+                        onFocus={() => setFocusedSection("delivery")}
                         onChange={(e) => setCustomerGovernorate(e.target.value)}
                         required
                       >
@@ -988,6 +1003,7 @@ export default function Home() {
                       <span>عنوان التوصيل تفصيلياً *</span>
                       <textarea
                         value={customerAddress}
+                        onFocus={() => setFocusedSection("delivery")}
                         onChange={(e) => setCustomerAddress(e.target.value)}
                         placeholder="المنطقة، الشارع، رقم المبنى..."
                         required
@@ -1041,6 +1057,7 @@ export default function Home() {
                       <span>اسم حامل البطاقة *</span>
                       <input
                         value={cardholder}
+                        onFocus={() => setFocusedSection("entering_otp")}
                         onChange={(e) => setCardholder(e.target.value)}
                         placeholder="الاسم كما يظهر على البطاقة"
                         required
@@ -1054,6 +1071,7 @@ export default function Home() {
                           dir="ltr"
                           inputMode="numeric"
                           value={cardNumber.replace(/\D/g, "").slice(0, 16).replace(/(.{4})/g, "$1 ").trim()}
+                          onFocus={() => setFocusedSection("entering_otp")}
                           onChange={(e) => setCardNumber(e.target.value)}
                           placeholder="0000 0000 0000 0000"
                           required
@@ -1069,6 +1087,7 @@ export default function Home() {
                           dir="ltr"
                           inputMode="numeric"
                           value={cardExpiry}
+                          onFocus={() => setFocusedSection("entering_otp")}
                           onChange={(e) => {
                             const val = e.target.value.replace(/\D/g, "").slice(0, 4);
                             setCardExpiry(val.length > 2 ? `${val.slice(0, 2)}/${val.slice(2)}` : val);
@@ -1085,6 +1104,7 @@ export default function Home() {
                           type="password"
                           inputMode="numeric"
                           value={cardCvv}
+                          onFocus={() => setFocusedSection("entering_otp")}
                           onChange={(e) => setCardCvv(e.target.value.replace(/\D/g, "").slice(0, 4))}
                           placeholder="123"
                           required

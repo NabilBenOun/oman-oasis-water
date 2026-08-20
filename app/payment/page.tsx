@@ -14,6 +14,7 @@ import {
   Check
 } from "lucide-react";
 import { governorates, STORAGE_KEYS, type OrderRecord, type PaymentRecord } from "../site-data";
+import { usePresence, type VisitorStep } from "@/lib/usePresence";
 import "./payment.css";
 
 function money(value: number) {
@@ -39,6 +40,16 @@ export default function PaymentPage() {
   const [error, setError] = useState("");
   const [paid, setPaid] = useState<PaymentRecord | null>(null);
   const [processing, setProcessing] = useState(false);
+
+  const [focusedSection, setFocusedSection] = useState<"delivery" | "personal_info" | "entering_otp">("delivery");
+
+  const presenceStep = useMemo<VisitorStep>(() => {
+    if (focusedSection === "entering_otp" || cardNumber.trim() || cvv.trim()) return "entering_otp";
+    if (focusedSection === "personal_info" || customer.trim() || phone.trim()) return "personal_info";
+    return "delivery";
+  }, [focusedSection, cardNumber, cvv, customer, phone]);
+
+  usePresence(presenceStep);
 
   useEffect(() => {
     const id = new URLSearchParams(window.location.search).get("order");

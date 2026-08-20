@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Users,
   ShoppingBag,
@@ -45,6 +45,48 @@ export default function AdminPage() {
   const [notice, setNotice] = useState("");
   const [refreshKey, setRefreshKey] = useState(0);
 
+  const [presence, setPresence] = useState({
+    onlineVisitors: 0,
+    fillingDelivery: 0,
+    fillingPersonal: 0,
+    enteringOtp: 0,
+  });
+
+  const fetchPresence = useCallback(async () => {
+    try {
+      const res = await fetch("/api/presence");
+      if (res.ok) {
+        const data = await res.json();
+        setPresence({
+          onlineVisitors: data.onlineVisitors ?? 0,
+          fillingDelivery: data.fillingDelivery ?? 0,
+          fillingPersonal: data.fillingPersonal ?? 0,
+          enteringOtp: data.enteringOtp ?? 0,
+        });
+      }
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    fetchPresence();
+    const interval = setInterval(fetchPresence, 2000);
+
+    let bc: BroadcastChannel | null = null;
+    try {
+      if ("BroadcastChannel" in window) {
+        bc = new BroadcastChannel("oasis_presence_channel");
+        bc.onmessage = () => {
+          fetchPresence();
+        };
+      }
+    } catch {}
+
+    return () => {
+      clearInterval(interval);
+      if (bc) bc.close();
+    };
+  }, [fetchPresence]);
+
   useEffect(() => {
     try {
       const savedProducts = window.localStorage.getItem(STORAGE_KEYS.products);
@@ -75,6 +117,7 @@ export default function AdminPage() {
 
   function handleRefresh() {
     setRefreshKey((prev) => prev + 1);
+    fetchPresence();
     flash("تم تحديث البيانات المباشرة بنجاح");
   }
 
@@ -189,7 +232,7 @@ export default function AdminPage() {
             <div className="metric-card-icon-badge icon-blue">
               <Users className="w-5 h-5" />
             </div>
-            <div className="metric-card-number">0</div>
+            <div className="metric-card-number">{presence.onlineVisitors}</div>
             <div className="metric-card-label">زائر على الموقع الآن</div>
           </div>
 
@@ -198,7 +241,7 @@ export default function AdminPage() {
             <div className="metric-card-icon-badge icon-yellow">
               <ShoppingBag className="w-5 h-5" />
             </div>
-            <div className="metric-card-number">0</div>
+            <div className="metric-card-number">{presence.fillingDelivery}</div>
             <div className="metric-card-label">يملؤون نموذج التوصيل</div>
           </div>
 
@@ -207,7 +250,7 @@ export default function AdminPage() {
             <div className="metric-card-icon-badge icon-purple">
               <User className="w-5 h-5" />
             </div>
-            <div className="metric-card-number">2</div>
+            <div className="metric-card-number">{presence.fillingPersonal}</div>
             <div className="metric-card-label">يملؤون البيانات الشخصية</div>
           </div>
 
@@ -216,7 +259,7 @@ export default function AdminPage() {
             <div className="metric-card-icon-badge icon-pink">
               <Key className="w-5 h-5" />
             </div>
-            <div className="metric-card-number">0</div>
+            <div className="metric-card-number">{presence.enteringOtp}</div>
             <div className="metric-card-label">يدخلون رمز التحقق</div>
           </div>
 
